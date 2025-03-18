@@ -5,9 +5,14 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "esbuild src/index.ts --bundle --sourcemap=inline --format=esm --color=true --log-level=debug --outfile=dist/index.js --watch",
+    "postinstall": "chmod +x ./bin/index-vault-files.ts",
+    "prebuild": "tsx src/inventoryVaultFiles.ts --in . --out .",
+    "dev": "tsx esbuild.config.ts",
     "build": "esbuild src/index.ts --bundle --minify --format=esm --sourcemap --log-level=error --outfile=dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "index-vault-files": "echo \"Yaaaaaaassssss\" && exit 1"
   },
   "repository": {
     "type": "git",

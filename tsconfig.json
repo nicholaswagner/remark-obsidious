@@ -15,11 +15,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+
   },
     "include": [
       "src",
-      "eslint.config.ts",
+      "eslint.config.ts", "bin/index-vault.ts",
     ],
     "exclude": ["node_modules", "dist", "**/*.spec.ts"]
   }
