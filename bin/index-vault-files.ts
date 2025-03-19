@@ -14,23 +14,36 @@ import type {
 } from '../src/types/Obsidious';
 
 
-//https://help.obsidian.md/file-formats
+//These are pulled from https://help.obsidian.md/file-formats
 const obsidianImageTypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'];
 
 const argv = await yargs(process.argv.slice(2))
     .option('in', { type: 'string', demandOption: true, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
     .option('out', { type: 'string', demandOption: true, describe: 'The directory where the index files will be written.' })
-    .option('treeName', { type: 'string', demandOption: false, describe: 'Use a custom name for the resulting obsidious-tree.json' })
     .option('indexName', { type: 'string', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
     .option('ignore', { type: 'string', describe: 'path to gitignore which will filter the vault' })
     .help()
     .argv;
 
-// We dont want to try to capture any .dotfiles or try to process any files that are in the gitignore
 const gitignorePath = argv.ignore || path.join(argv.in, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
+const indexFilepath = path.join(argv.out, argv.indexName || 'obsidious-index.json');
+
+const obsidiousVault: ObsidiousVaultData = {
+    files: {},
+    fileTree: [],
+    idsByExtension: {},
+    idsByLabelSlug: {},
+    idsByWebPath: {},
+    imageIds: [],
+    stats: {},
+};
+
+// The children node of this Tree will become the root node of the output FileTree
+const Tree: ObsidiousFileTreeNode = { id: hash('root'), label: '', children: [] };
 
 let ig: ignore.Ignore | undefined;
+
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
     ig = ignore().add(gitignoreData);
@@ -40,9 +53,6 @@ if (gitignoreExists) {
 else {
     console.log('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
 }
-
-const treeFilepath = path.join(argv.out, argv.treeName || 'obsidious-tree.json');
-const indexFilepath = path.join(argv.out, argv.indexName || 'obsidious-index.json');
 
 const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     return files.filter((file) => {
@@ -71,16 +81,7 @@ async function getTargetDirents(targetDir: string, basePath: string = ''): Promi
 const getFileExtension = (filePath: string): string => path.extname(filePath).slice(1);
 
 const indexVault = async (dirents: Dirent[]) => {
-    const obsidiousVault: ObsidiousVaultData = {
-        files: {},
-        fileTree: [],
-        idsByExtension: {},
-        idsByLabelSlug: {},
-        idsByWebPath: {},
-        imageIds: [],
-        stats: {},
-    }
-    const Tree: ObsidiousFileTreeNode = { id: hash('root'), label: '', children: [] };
+
 
     for (const ent of dirents) {
         const { name: filename, parentPath } = ent;
@@ -90,26 +91,31 @@ const indexVault = async (dirents: Dirent[]) => {
         const isDirectory = ent.isDirectory();
         const id = hash(filepath);
 
-        let currentTree = Tree;
-        let treeNode: ObsidiousFileTreeNode;
-        let vaultItem: ObsidiousVaultItem;
-
         let stats;
-        try { stats = await fs.promises.stat(path.join(parentPath, filename)); }
-        catch (error) { console.error(`Error getting stats for file ${filepath}:`, error); }
+        try {
+            stats = await fs.promises.stat(path.join(parentPath, filename));
+        } catch (error) {
+            console.error(`Error getting stats for file ${filepath}:`, error);
+            stats = { mtimeMs: 0 }; // Default value to prevent undefined access
+        }
 
-        filepath.split('/').forEach((part) => {
+        let currentTree = Tree;
+
+        const segments = filepath.split('/');
+        for (let i = 0; i < segments.length; i++) {
+            const part = segments[i];
+            const isLastSegment = i === segments.length - 1;
             const existingChild = currentTree.children?.find((child) => child.label === part);
 
             if (!existingChild) {
                 const extension = isFile ? getFileExtension(filename) : undefined;
                 const label = isFile && extension === 'md' ? filename.replace(`.${extension}`, '') : filename;
-                const webPath = isFile && extension === 'md' ? slugify(filepath.replace(`.${extension}`, '')) : slugify(filepath);
+                const webPath = slugify(isFile && extension === 'md' ? filepath.replace(`.${extension}`, '') : filepath);
                 const children = isDirectory ? [] : undefined;
 
-                vaultItem = {
+                const vaultItem: ObsidiousVaultItem = {
                     ...(isFile ? { extension } : {}),
-                    ...(children),
+                    ...(children ? { children } : {}),
                     ...(stats?.mtimeMs ? { mtimeMs: stats.mtimeMs } : {}),
                     filepath,
                     fileType: isFile ? 'file' : 'folder',
@@ -118,24 +124,25 @@ const indexVault = async (dirents: Dirent[]) => {
                     labelSlug: slugify(label),
                     webPath,
                 };
+
                 obsidiousVault.files[id] = vaultItem;
                 obsidiousVault.idsByWebPath[vaultItem.webPath] = id;
                 obsidiousVault.idsByLabelSlug[vaultItem.labelSlug] = id;
 
                 if (extension) {
                     (obsidiousVault.idsByExtension[extension] = obsidiousVault.idsByExtension[extension] || []).push(id);
-                    obsidianImageTypes.includes(extension) && obsidiousVault.imageIds.push(id);
+                    if (obsidianImageTypes.includes(extension)) {
+                        obsidiousVault.imageIds.push(id);
+                    }
                 }
 
-                treeNode = isDirectory ? { id, label, children: [] } : { id, label };
-                currentTree.children?.push(treeNode);
-                if (isDirectory) currentTree = treeNode;
-
+                const newNode: ObsidiousFileTreeNode = { id, label, ...(isDirectory && { children: [] }) };
+                currentTree.children?.push(newNode);
+                currentTree = isDirectory ? newNode : currentTree;
             } else {
-                isDirectory && !existingChild.children && (existingChild.children = []);
                 currentTree = existingChild;
             }
-        });
+        }
     }
 
     obsidiousVault.fileTree = Tree.children || [];
@@ -144,12 +151,10 @@ const indexVault = async (dirents: Dirent[]) => {
         totalDirectories: Tree.children?.length || 0,
         totalImages: obsidiousVault.imageIds.length,
         fileTypesSummary: Object.entries(obsidiousVault.idsByExtension).map(([ext, ids]) => ({ ext, count: ids.length })),
-
     };
 
-    return { tree: Tree.children, obsidiousVault };
+    return obsidiousVault;
 };
-
 
 try {
     const dirents = await getTargetDirents(argv.in).catch((err) => {
@@ -157,10 +162,7 @@ try {
         process.exit(1);
     });
 
-    const { tree, obsidiousVault } = await indexVault(dirents);
-
-    fs.writeFileSync(treeFilepath, JSON.stringify(tree, null, 2));
-    console.log(`[ info ]: vault files tree data has been saved as:    ${treeFilepath}`);
+    const obsidiousVault = await indexVault(dirents);
 
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
     console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
