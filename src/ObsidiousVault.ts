@@ -1,5 +1,4 @@
-import type { ObsidiousVaultInterface, ObsidiousVaultData } from './types/Obsidious';
-
+import type { ObsidiousVaultInterface, ObsidiousVaultData, ObsidiousVaultItem } from './types/Obsidious';
 
 let vaultData: ObsidiousVaultData | null = null;
 
@@ -13,8 +12,11 @@ const getFileForId = (id: string) => vaultData ? vaultData.files[id] || null : n
 const getFileForWebPathSlug = (webPath: string) => vaultData ? getFileForId(vaultData.idsByWebPath[webPath]) : null;
 const getFileForLabelSlug = (labelSlug: string) => vaultData ? getFileForId(vaultData.idsByLabelSlug[labelSlug]) : null;
 const getAllImageFiles = () => vaultData ? vaultData.imageIds.map(getFileForId).filter(item => item !== null) : [];
-const getFilesByExtension = (extension: string): string[] => vaultData ? (vaultData.idsByExtension[extension] || []) : [];
 const getFileTree = () => vaultData ? vaultData.fileTree : [];
+const getFilesByExtension = (extension: string): ObsidiousVaultItem[] => {
+    const ids = vaultData ? (vaultData.idsByExtension[extension] || []) : [];
+    return ids.map(getFileForId).filter(item => item !== null);
+}
 
 const ObsidiousVault: ObsidiousVaultInterface = {
     files: {},

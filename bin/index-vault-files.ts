@@ -121,13 +121,13 @@ const indexVault = async (dirents: Dirent[]) => {
                     fileType: isFile ? 'file' : 'folder',
                     id,
                     label,
-                    labelSlug: slugify(label),
-                    webPath,
+                    // labelSlug: slugify(label),
+                    // webPath,
                 };
 
                 obsidiousVault.files[id] = vaultItem;
-                obsidiousVault.idsByWebPath[vaultItem.webPath] = id;
-                obsidiousVault.idsByLabelSlug[vaultItem.labelSlug] = id;
+                obsidiousVault.idsByWebPath[webPath] = id;
+                obsidiousVault.idsByLabelSlug[slugify(label)] = id;
 
                 if (extension) {
                     (obsidiousVault.idsByExtension[extension] = obsidiousVault.idsByExtension[extension] || []).push(id);

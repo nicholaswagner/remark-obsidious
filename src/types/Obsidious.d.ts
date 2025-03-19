@@ -2,14 +2,13 @@ export type ObsidiousVaultItem = {
     children?: ObsidiousVaultItem[];
     extension?: string; // Always present for files (e.g., 'jpg', 'pdf')
     filepath: string;
-    fileType: 'folder' | 'file';
+    fileType: string; // it will be 'folder' | 'file'; (i'm not gonna pull in schema validation just for this one line)
     id: string;
     label: string;
-    labelSlug: string;
+    // labelSlug: string;
     mtimeMs?: number; // last modified time in milliseconds
-    webPath: string;
+    // webPath: string;
 };
-
 
 export type ObsidiousFileTreeNode = {
     children?: ObsidiousFileTreeNode[];
