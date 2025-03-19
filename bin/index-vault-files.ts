@@ -5,12 +5,17 @@ import fs, { Dirent, readFileSync } from 'fs';
 import path from 'path';
 import hash from '../src/utils/hash';
 import { slugify } from '../src/utils/slugify';
+import ignore from 'ignore';
 
-import type { ObsidiousVaultItem, ObsidiousVaultData, ObsidiousFileTreeNode } from '../src/types/Obsidious';
+import type {
+    ObsidiousVaultItem,
+    ObsidiousVaultData,
+    ObsidiousFileTreeNode,
+} from '../src/types/Obsidious';
+
 
 //https://help.obsidian.md/file-formats
 const obsidianImageTypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'];
-
 
 const argv = await yargs(process.argv.slice(2))
     .option('in', { type: 'string', demandOption: true, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
@@ -22,36 +27,70 @@ const argv = await yargs(process.argv.slice(2))
     .argv;
 
 // We dont want to try to capture any hidden .dotfiles or try to process any files that are in the gitignore
-// TODO - add support for .gitignore rules, right now its just names
-const gitignorePath = argv.ignore || `${argv.in}/.gitignore`;
+const gitignorePath = argv.ignore || path.join(argv.in, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
-const mask = gitignoreExists ? readFileSync(gitignorePath, 'utf8').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#')).join(' ').trim() : '';
+
+// const mask = gitignoreExists ? readFileSync(gitignorePath, 'utf8').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#')).join(' ').trim() : '';
+let ig: ignore.Ignore | undefined;
+if (gitignoreExists) {
+    const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
+    ig = ignore().add(gitignoreData);
+    console.log('[info]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied:');
+    console.log(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
+}
+else {
+    console.log('[info]: No .gitignore found. Will only ignore dotfiles.');
+}
+
 const treeFilepath = path.join(argv.out, argv.treeName || 'obsidious-tree.json');
 const indexFilepath = path.join(argv.out, argv.indexName || 'obsidious-index.json');
 
 
-if (gitignoreExists) {
-    console.log('[ info ]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied (if supported)');
-    console.log(mask.split(' '));
-}
-else {
-    console.log('[ info ]: no .gitignore found. will only ignore dotfiles this run.');
-}
+// if (gitignoreExists) {
+//     console.log('[ info ]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied (if supported)');
+//     console.log(mask.split(' '));
+// }
+// else {
+//     console.log('[ info ]: no .gitignore found. will only ignore dotfiles this run.');
+// }
 
-const filterIgnored = (files: Dirent[]) => {
+// const filterIgnored = (files: Dirent[]) => {
+//     return files.filter((file) => {
+//         if (file.name.startsWith('.')) return false; // no hidden files
+//         if (mask.includes(file.name)) return false; // no ignored files
+//         else return true;
+//     });
+// };
+const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     return files.filter((file) => {
+        const filePath = path.join(basePath, file.name);
         if (file.name.startsWith('.')) return false; // no hidden files
-        if (mask.includes(file.name)) return false; // no ignored files
-        else return true;
+        if (ig && ig.ignores(filePath.replace(argv.in, ''))) return false; // no ignored files
+        return true;
     });
 };
 
-async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<fs.Dirent[]> {
+// async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<fs.Dirent[]> {
+//     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
+//     const filtered = filterIgnored(ents); // remove hidden and ignored files
+//     const result: fs.Dirent[] = [];
+//     for (const ent of filtered) {
+//         const currentPath = path.join(basePath, ent.name);
+//         result.push(ent);
+//         if (ent.isDirectory()) {
+//             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
+//             result.push(...subDirents);
+//         }
+//     }
+//     return result;
+// }
+
+async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
-    const filtered = filterIgnored(ents); // remove hidden and ignored files
-    const result: fs.Dirent[] = [];
+    const filtered = filterIgnored(ents, path.join(basePath, targetDir));
+    let result: Dirent[] = [];
     for (const ent of filtered) {
-        const currentPath = path.join(basePath, ent.name);
+        const currentPath = path.join(basePath, targetDir, ent.name);
         result.push(ent);
         if (ent.isDirectory()) {
             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
@@ -63,7 +102,7 @@ async function getTargetDirents(targetDir: string, basePath: string = ''): Promi
 
 const getFileExtension = (filePath: string): string => path.extname(filePath).slice(1);
 
-const indexVault = (dirents: Dirent[]) => {
+const indexVault = async (dirents: Dirent[]) => {
     const obsidiousVault: ObsidiousVaultData = {
         files: {},
         fileTree: [],
@@ -88,7 +127,8 @@ const indexVault = (dirents: Dirent[]) => {
         let vaultItem: ObsidiousVaultItem;
 
         let stats;
-        try { stats = fs.statSync(parentPath + '/' + filename); }
+        // try { stats = fs.statSync(parentPath + '/' + filename); }
+        try { stats = await fs.promises.stat(path.join(parentPath, filename)); }
         catch (error) { console.error(`Error getting stats for file ${filepath}:`, error); }
 
         filepath.split('/').forEach((part) => {
@@ -103,12 +143,12 @@ const indexVault = (dirents: Dirent[]) => {
                 vaultItem = {
                     ...(isFile ? { extension } : {}),
                     ...(children),
+                    ...(stats?.mtimeMs ? { mtimeMs: stats.mtimeMs } : {}),
                     filepath,
                     fileType: isFile ? 'file' : 'folder',
                     id,
                     label,
                     labelSlug: slugify(label),
-                    mtimeMs: stats.mtimeMs,
                     webPath,
                 };
                 obsidiousVault.files[id] = vaultItem;
@@ -143,17 +183,25 @@ const indexVault = (dirents: Dirent[]) => {
     return { tree: Tree.children, obsidiousVault };
 };
 
-const dirents = await getTargetDirents(argv.in).catch((err) => {
-    console.error('\n[ Error ] encountered while attempting to map vault files:  ', err, '\n');
+
+try {
+    const dirents = await getTargetDirents(argv.in).catch((err) => {
+        console.error('\n[ Error ] encountered while attempting to map vault files:  ', err, '\n');
+        process.exit(1);
+    });
+
+    const { tree, obsidiousVault } = await indexVault(dirents);
+
+    fs.writeFileSync(treeFilepath, JSON.stringify(tree, null, 2));
+    console.log(`[ info ]: vault files tree data has been saved as:    ${treeFilepath}`);
+
+    // const hashTable = buildLookupTable(results.tree);
+    fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
+    console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
+
+} catch (err) {
+    console.error('[error]: Encountered an error while attempting to map vault files:', err);
     process.exit(1);
-});
+}
 
-// Builds a FileTree object from the Dirent[] array first, then we build the hashTable from the tree
-const { tree, obsidiousVault } = indexVault(dirents);
 
-fs.writeFileSync(treeFilepath, JSON.stringify(tree, null, 2));
-console.log(`[ info ]: vault files tree data has been saved as:    ${treeFilepath}`);
-
-// const hashTable = buildLookupTable(results.tree);
-fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
-console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
