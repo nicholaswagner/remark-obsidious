@@ -3,9 +3,9 @@ import type { ObsidiousVaultInterface, ObsidiousVaultData, ObsidiousVaultItem } 
 let vaultData: ObsidiousVaultData | null = null;
 
 const initialize = (data: ObsidiousVaultData): ObsidiousVaultInterface => {
-    if (vaultData) return ObsidiousVault;
+    if (vaultData) return Obsidious;
     vaultData = data;
-    return ObsidiousVault;
+    return Obsidious;
 };
 
 const getFileForId = (id: string) => vaultData ? vaultData.files[id] || null : null;
@@ -18,7 +18,7 @@ const getFilesByExtension = (extension: string): ObsidiousVaultItem[] => {
     return ids.map(getFileForId).filter(item => item !== null);
 }
 
-const ObsidiousVault: ObsidiousVaultInterface = {
+const Obsidious: ObsidiousVaultInterface = {
     files: {},
     fileTree: [],
     idsByExtension: {},
@@ -36,4 +36,4 @@ const ObsidiousVault: ObsidiousVaultInterface = {
     ...(vaultData || {}),
 };
 
-export default ObsidiousVault;
+export default Obsidious;

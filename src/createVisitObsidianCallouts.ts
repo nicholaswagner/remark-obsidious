@@ -1,6 +1,6 @@
 import { Visitor } from 'unist-util-visit';
-import { PluginOptions } from './types/ObsidiousOptions';
 import type { Blockquote, Paragraph, Text } from 'mdast';
+import { RemarkObsidiousOptions } from './types/RemarkObsidious';
 
 type ExtendedBlockquote = Blockquote & {
     data?: Blockquote["data"] & {
@@ -15,7 +15,7 @@ type ExtendedParagraph = Paragraph & {
 }
 
 const calloutRegex = /^\[\!\s*([\w-]+)\s*\]([-+]?)/;
-const createVisitObsidianCallouts = ({ classNames }: PluginOptions): Visitor<ExtendedBlockquote> => {
+const createVisitObsidianCallouts = ({ classNames }: RemarkObsidiousOptions): Visitor<ExtendedBlockquote> => {
     const { calloutClassName, calloutIsFoldableClassName, calloutTitleClassName } = classNames;
     return (blockquoteNode) => {
         if (!Array.isArray(blockquoteNode.children) || blockquoteNode.children.length === 0) return;

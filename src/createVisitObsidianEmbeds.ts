@@ -1,6 +1,6 @@
 import { Visitor } from 'unist-util-visit';
 import { Literal, PhrasingContent } from 'mdast';
-import { PluginOptions } from './types/ObsidiousOptions';
+import { RemarkObsidiousOptions } from './types/RemarkObsidious';
 
 const obsidianEmbed = /!?\[\[[^\]]+\]\]/g; // Matches all the ![[...]] in the markdown
 const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Captures the link and optional alias from inside the ![[...]]
@@ -10,7 +10,7 @@ const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Ca
  * Creates a visitor function that processes Obsidian links and embeds in markdown nodes.
  * When links are encountered, 
  */
-const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFileMetaForLabel, slugify }: PluginOptions): Visitor<Literal> => {
+const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFileMetaForLabel, slugify }: RemarkObsidiousOptions): Visitor<Literal> => {
     const { linkClassName, imageClassName, errorClassName, embeddedMdClassName } = classNames;
     return (node, index, parent) => {
         if (!node.value || typeof node.value !== 'string' || !parent || index === undefined) return;

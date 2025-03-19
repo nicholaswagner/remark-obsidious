@@ -3,8 +3,7 @@
 import yargs from 'yargs';
 import fs, { Dirent, readFileSync } from 'fs';
 import path from 'path';
-import hash from '../src/utils/hash';
-import { slugify } from '../src/utils/slugify';
+import { hash, slugify } from '../src/utils/';
 import ignore from 'ignore';
 
 import type {

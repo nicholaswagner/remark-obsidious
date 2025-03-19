@@ -5,9 +5,7 @@ export type ObsidiousVaultItem = {
     fileType: string; // it will be 'folder' | 'file'; (i'm not gonna pull in schema validation just for this one line)
     id: string;
     label: string;
-    // labelSlug: string;
     mtimeMs?: number; // last modified time in milliseconds
-    // webPath: string;
 };
 
 export type ObsidiousFileTreeNode = {

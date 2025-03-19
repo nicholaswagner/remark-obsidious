@@ -1,4 +1,4 @@
-import slugify from 'slugify';
+import { slugify } from '../utils';
 
 type RemarkObsidiousOptions = {
     basePath: string;

@@ -1,12 +1,12 @@
 import { Visitor } from 'unist-util-visit';
 import { PhrasingContent } from 'mdast';
-import { PluginOptions } from './types/ObsidiousOptions';
+import { RemarkObsidiousOptions } from './types/RemarkObsidious';
 import type { Text } from 'mdast';
 
 
 const hilight = /==([^=]+)==/gm;
 
-const createVisitObsidianHilights = ({ classNames }: PluginOptions): Visitor<Text> => {
+const createVisitObsidianHilights = ({ classNames }: RemarkObsidiousOptions): Visitor<Text> => {
     const { hilightClassName } = classNames;
 
     return (node, index, parent) => {

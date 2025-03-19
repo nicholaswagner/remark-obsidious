@@ -27,7 +27,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-export default function hash(str: string): string {
+export function hash(str: string): string {
     // 'm' and 'r' are mixing constants generated offline.
     // They're not really 'magic', they just happen to work well.
 

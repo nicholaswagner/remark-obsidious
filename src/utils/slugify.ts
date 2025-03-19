@@ -10,3 +10,9 @@ export const slugify = (str: string) =>
         .replace(/[^a-z0-9\/]+/g, "-") // Replace non-alphanumeric (except `/`) with `-`
         .replace(/_+/g, "_") // Collapse multiple underscores into one
         .replace(/^_+|_+$/g, ""); // Trim leading/trailing `_`
+
+
+export const slugifyFilepath = (filepath: string, extension?: string) => {
+    if (extension === 'md') filepath = filepath.replace(/\.md$/, '');
+    return slugify(filepath);
+} 
