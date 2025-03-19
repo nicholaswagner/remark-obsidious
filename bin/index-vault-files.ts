@@ -5,25 +5,8 @@ import fs, { Dirent, readFileSync } from 'fs';
 import path from 'path';
 import hash from '../src/utils/hash';
 import { slugify } from '../src/utils/slugify';
-import type { VaultItem } from '../src/types/VaultItem';
 
-
-type TreeItem = {
-    id: string;
-    label: string;
-    children?: TreeItem[];
-}
-
-type VaultIndex = {
-    files: Record<string, VaultItem>;
-    imageIds: string[];
-    idsByWebPath: Record<string, string>;
-    idsByLabelSlug: Record<string, string>;
-    idsByExtension: Record<string, string[]>;
-    stats: Record<string, any>;
-    fileTree: TreeItem[];
-}
-
+import type { ObsidiousVaultItem, ObsidiousVaultData, ObsidiousFileTreeNode } from '../src/types/Obsidious';
 
 //https://help.obsidian.md/file-formats
 const obsidianImageTypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'];
@@ -39,6 +22,7 @@ const argv = await yargs(process.argv.slice(2))
     .argv;
 
 // We dont want to try to capture any hidden .dotfiles or try to process any files that are in the gitignore
+// TODO - add support for .gitignore rules, right now its just names
 const gitignorePath = argv.ignore || `${argv.in}/.gitignore`;
 const gitignoreExists = fs.existsSync(gitignorePath)
 const mask = gitignoreExists ? readFileSync(gitignorePath, 'utf8').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#')).join(' ').trim() : '';
@@ -77,22 +61,19 @@ async function getTargetDirents(targetDir: string, basePath: string = ''): Promi
     return result;
 }
 
-
 const getFileExtension = (filePath: string): string => path.extname(filePath).slice(1);
 
-
-
 const indexVault = (dirents: Dirent[]) => {
-    const vaultIndex: VaultIndex = {
+    const obsidiousVault: ObsidiousVaultData = {
         files: {},
-        imageIds: [],
-        idsByWebPath: {},
-        idsByLabelSlug: {},
+        fileTree: [],
         idsByExtension: {},
+        idsByLabelSlug: {},
+        idsByWebPath: {},
+        imageIds: [],
         stats: {},
-        fileTree: []
     }
-    const Tree: TreeItem = { id: hash('root'), label: '', children: [] };
+    const Tree: ObsidiousFileTreeNode = { id: hash('root'), label: '', children: [] };
 
     for (const ent of dirents) {
         const { name: filename, parentPath } = ent;
@@ -103,8 +84,8 @@ const indexVault = (dirents: Dirent[]) => {
         const id = hash(filepath);
 
         let currentTree = Tree;
-        let treeItem: TreeItem;
-        let vaultItem: VaultItem;
+        let treeNode: ObsidiousFileTreeNode;
+        let vaultItem: ObsidiousVaultItem;
 
         let stats;
         try { stats = fs.statSync(parentPath + '/' + filename); }
@@ -130,18 +111,18 @@ const indexVault = (dirents: Dirent[]) => {
                     mtimeMs: stats.mtimeMs,
                     webPath,
                 };
-                vaultIndex.files[id] = vaultItem;
-                vaultIndex.idsByWebPath[vaultItem.webPath] = id;
-                vaultIndex.idsByLabelSlug[vaultItem.labelSlug] = id;
+                obsidiousVault.files[id] = vaultItem;
+                obsidiousVault.idsByWebPath[vaultItem.webPath] = id;
+                obsidiousVault.idsByLabelSlug[vaultItem.labelSlug] = id;
 
                 if (extension) {
-                    (vaultIndex.idsByExtension[extension] = vaultIndex.idsByExtension[extension] || []).push(id);
-                    obsidianImageTypes.includes(extension) && vaultIndex.imageIds.push(id);
+                    (obsidiousVault.idsByExtension[extension] = obsidiousVault.idsByExtension[extension] || []).push(id);
+                    obsidianImageTypes.includes(extension) && obsidiousVault.imageIds.push(id);
                 }
 
-                treeItem = isDirectory ? { id, label, children: [] } : { id, label };
-                currentTree.children?.push(treeItem);
-                if (isDirectory) currentTree = treeItem;
+                treeNode = isDirectory ? { id, label, children: [] } : { id, label };
+                currentTree.children?.push(treeNode);
+                if (isDirectory) currentTree = treeNode;
 
             } else {
                 isDirectory && !existingChild.children && (existingChild.children = []);
@@ -150,16 +131,16 @@ const indexVault = (dirents: Dirent[]) => {
         });
     }
 
-    vaultIndex.fileTree = Tree.children || [];
-    vaultIndex.stats = {
-        totalFiles: Object.keys(vaultIndex.files).length,
+    obsidiousVault.fileTree = Tree.children || [];
+    obsidiousVault.stats = {
+        totalFiles: Object.keys(obsidiousVault.files).length,
         totalDirectories: Tree.children?.length || 0,
-        totalImages: vaultIndex.imageIds.length,
-        fileTypesSummary: Object.entries(vaultIndex.idsByExtension).map(([ext, ids]) => ({ ext, count: ids.length })),
+        totalImages: obsidiousVault.imageIds.length,
+        fileTypesSummary: Object.entries(obsidiousVault.idsByExtension).map(([ext, ids]) => ({ ext, count: ids.length })),
 
     };
 
-    return { tree: Tree.children, vaultIndex };
+    return { tree: Tree.children, obsidiousVault };
 };
 
 const dirents = await getTargetDirents(argv.in).catch((err) => {
@@ -168,11 +149,11 @@ const dirents = await getTargetDirents(argv.in).catch((err) => {
 });
 
 // Builds a FileTree object from the Dirent[] array first, then we build the hashTable from the tree
-const { tree, vaultIndex } = indexVault(dirents);
+const { tree, obsidiousVault } = indexVault(dirents);
 
 fs.writeFileSync(treeFilepath, JSON.stringify(tree, null, 2));
 console.log(`[ info ]: vault files tree data has been saved as:    ${treeFilepath}`);
 
 // const hashTable = buildLookupTable(results.tree);
-fs.writeFileSync(indexFilepath, JSON.stringify(vaultIndex, null, 2));
+fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
 console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);

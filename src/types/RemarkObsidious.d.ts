@@ -1,6 +1,6 @@
 import slugify from 'slugify';
 
-type PluginOptions = {
+type RemarkObsidiousOptions = {
     basePath: string;
     classNames: {
         calloutClassName: string;
