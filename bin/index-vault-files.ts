@@ -26,11 +26,10 @@ const argv = await yargs(process.argv.slice(2))
     .help()
     .argv;
 
-// We dont want to try to capture any hidden .dotfiles or try to process any files that are in the gitignore
+// We dont want to try to capture any .dotfiles or try to process any files that are in the gitignore
 const gitignorePath = argv.ignore || path.join(argv.in, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
 
-// const mask = gitignoreExists ? readFileSync(gitignorePath, 'utf8').split('\n').map(line => line.trim()).filter(line => line && !line.startsWith('#')).join(' ').trim() : '';
 let ig: ignore.Ignore | undefined;
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
@@ -39,28 +38,12 @@ if (gitignoreExists) {
     console.log(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
 }
 else {
-    console.log('[info]: No .gitignore found. Will only ignore dotfiles.');
+    console.log('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
 }
 
 const treeFilepath = path.join(argv.out, argv.treeName || 'obsidious-tree.json');
 const indexFilepath = path.join(argv.out, argv.indexName || 'obsidious-index.json');
 
-
-// if (gitignoreExists) {
-//     console.log('[ info ]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied (if supported)');
-//     console.log(mask.split(' '));
-// }
-// else {
-//     console.log('[ info ]: no .gitignore found. will only ignore dotfiles this run.');
-// }
-
-// const filterIgnored = (files: Dirent[]) => {
-//     return files.filter((file) => {
-//         if (file.name.startsWith('.')) return false; // no hidden files
-//         if (mask.includes(file.name)) return false; // no ignored files
-//         else return true;
-//     });
-// };
 const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     return files.filter((file) => {
         const filePath = path.join(basePath, file.name);
@@ -69,21 +52,6 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
         return true;
     });
 };
-
-// async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<fs.Dirent[]> {
-//     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
-//     const filtered = filterIgnored(ents); // remove hidden and ignored files
-//     const result: fs.Dirent[] = [];
-//     for (const ent of filtered) {
-//         const currentPath = path.join(basePath, ent.name);
-//         result.push(ent);
-//         if (ent.isDirectory()) {
-//             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
-//             result.push(...subDirents);
-//         }
-//     }
-//     return result;
-// }
 
 async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
@@ -127,7 +95,6 @@ const indexVault = async (dirents: Dirent[]) => {
         let vaultItem: ObsidiousVaultItem;
 
         let stats;
-        // try { stats = fs.statSync(parentPath + '/' + filename); }
         try { stats = await fs.promises.stat(path.join(parentPath, filename)); }
         catch (error) { console.error(`Error getting stats for file ${filepath}:`, error); }
 
@@ -195,7 +162,6 @@ try {
     fs.writeFileSync(treeFilepath, JSON.stringify(tree, null, 2));
     console.log(`[ info ]: vault files tree data has been saved as:    ${treeFilepath}`);
 
-    // const hashTable = buildLookupTable(results.tree);
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
     console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
 
@@ -203,5 +169,3 @@ try {
     console.error('[error]: Encountered an error while attempting to map vault files:', err);
     process.exit(1);
 }
-
-
