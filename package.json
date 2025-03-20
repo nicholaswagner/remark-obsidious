@@ -1,12 +1,11 @@
 {
   "name": "remark-obsidious",
-  "version": "0.3.4",
+  "version": "0.3.6",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "postinstall": "chmod +x ./bin/*",
-    "prebuild": "tsx src/inventoryVaultFiles.ts --in . --out .",
+    "postinstall": "shx chmod +x ./bin/*",
     "dev": "tsx esbuild.config.ts",
     "build": "esbuild src/index.ts --bundle --minify --format=esm --sourcemap --log-level=error --outfile=dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -35,12 +34,13 @@
   },
   "homepage": "https://github.com/nicholaswagner/remark-obsidious#readme",
   "dependencies": {
-    "yargs": "^17.7.2",
-    "tsx": "^4.19.3",
     "ignore": "^7.0.3",
     "mdast-util-to-hast": "^13.2.0",
+    "shx": "^0.4.0",
+    "tsx": "^4.19.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/node": "^22.13.10",

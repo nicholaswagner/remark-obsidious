@@ -17,16 +17,20 @@ import type {
 const obsidianImageTypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'];
 
 const argv = await yargs(process.argv.slice(2))
-    .option('in', { type: 'string', demandOption: true, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
-    .option('out', { type: 'string', demandOption: true, describe: 'The directory where the index files will be written.' })
-    .option('indexName', { type: 'string', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
+    .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
+    .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where the index files will be written.' })
+    .option('indexName', { type: 'string', default: 'obsidious-index.json', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
     .option('ignore', { type: 'string', describe: 'path to gitignore which will filter the vault' })
     .help()
+    .alias('h', 'help')
     .argv;
 
-const gitignorePath = argv.ignore || path.join(argv.in, '.gitignore');
+const inDir = path.resolve(argv.in);
+const outDir = path.resolve(argv.out);
+const indexFilepath = path.join(outDir, argv.indexName);
+
+const gitignorePath = argv.ignore || path.join(inDir, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
-const indexFilepath = path.join(argv.out, argv.indexName || 'obsidious-index.json');
 
 const obsidiousVault: ObsidiousVaultData = {
     files: {},
@@ -57,12 +61,16 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     return files.filter((file) => {
         const filePath = path.join(basePath, file.name);
         if (file.name.startsWith('.')) return false; // no hidden files
-        if (ig && ig.ignores(filePath.replace(argv.in, ''))) return false; // no ignored files
+
+        const relativePath = path.relative(inDir, filePath); // Ensure proper relative path
+        if (ig && ig.ignores(relativePath)) return false; // no ignored files
+
         return true;
     });
 };
 
 async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
+    console.log('[info]: scanning directory: ', targetDir);
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
     let result: Dirent[] = [];
@@ -81,10 +89,9 @@ const getFileExtension = (filePath: string): string => path.extname(filePath).sl
 
 const indexVault = async (dirents: Dirent[]) => {
 
-
     for (const ent of dirents) {
         const { name: filename, parentPath } = ent;
-        const dirPath = path.relative(argv.in, parentPath);
+        const dirPath = path.relative(inDir, parentPath);
         const filepath = dirPath ? `${dirPath}/${filename}` : filename;
         const isFile = ent.isFile();
         const isDirectory = ent.isDirectory();
@@ -120,8 +127,6 @@ const indexVault = async (dirents: Dirent[]) => {
                     fileType: isFile ? 'file' : 'folder',
                     id,
                     label,
-                    // labelSlug: slugify(label),
-                    // webPath,
                 };
 
                 obsidiousVault.files[id] = vaultItem;
@@ -156,7 +161,7 @@ const indexVault = async (dirents: Dirent[]) => {
 };
 
 try {
-    const dirents = await getTargetDirents(argv.in).catch((err) => {
+    const dirents = await getTargetDirents(inDir).catch((err) => {
         console.error('\n[ Error ] encountered while attempting to map vault files:  ', err, '\n');
         process.exit(1);
     });

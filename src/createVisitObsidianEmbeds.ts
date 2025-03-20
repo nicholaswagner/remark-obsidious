@@ -1,6 +1,7 @@
 import { Visitor } from 'unist-util-visit';
 import { Literal, PhrasingContent } from 'mdast';
 import { RemarkObsidiousOptions } from './types/RemarkObsidious';
+import { slugifyFilepath } from './utils';
 
 const obsidianEmbed = /!?\[\[[^\]]+\]\]/g; // Matches all the ![[...]] in the markdown
 const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Captures the link and optional alias from inside the ![[...]]
@@ -32,7 +33,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                 continue;
             }
             const urlParamsIndex = params[1].indexOf('#');
-            const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex) : '';
+            const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1) : '';
             const isCarotParams = urlParams.startsWith('^');
             const file = getFileMetaForLabel(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
             const title = isCarotParams ? `${file?.label} > ${urlParams.slice(1)}` : params[1];
@@ -72,7 +73,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                                     options: params[2] ?? undefined,
                                     src: filePathPrefix + src,
                                     'data-ext': file.extension,
-                                    'data-weburl': file.webPath,
                                     'data-hash-params': slugify(urlParams),
                                     'data-label': file.label,
                                 },
@@ -83,7 +83,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                 } else {
                     results.push({
                         type: 'link',
-                        url: basePath + file.webPath + urlParams,
+                        url: basePath + slugifyFilepath(file.filepath, file.extension) + urlParams,
                         title,
                         data: {
                             hProperties: {
@@ -91,7 +91,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                                 options: params[2] ?? undefined,
                                 src: filePathPrefix + file.filepath,
                                 'data-ext': file.extension,
-                                'data-weburl': file.webPath,
                                 'data-hash-params': slugify(urlParams),
                                 'data-label': file.label,
                             },

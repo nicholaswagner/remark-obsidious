@@ -12,7 +12,5 @@ export const slugify = (str: string) =>
         .replace(/^_+|_+$/g, ""); // Trim leading/trailing `_`
 
 
-export const slugifyFilepath = (filepath: string, extension?: string) => {
-    if (extension === 'md') filepath = filepath.replace(/\.md$/, '');
-    return slugify(filepath);
-} 
+export const slugifyFilepath = (filepath: string, extension?: string) =>
+    extension === 'md' ? slugify(filepath.replace(/\.md$/, '')) : slugify(filepath);
