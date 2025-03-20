@@ -1,18 +1,18 @@
 {
   "name": "remark-obsidious",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "postinstall": "chmod +x ./bin/index-vault-files.ts",
+    "postinstall": "chmod +x ./bin/*",
     "prebuild": "tsx src/inventoryVaultFiles.ts --in . --out .",
     "dev": "tsx esbuild.config.ts",
     "build": "esbuild src/index.ts --bundle --minify --format=esm --sourcemap --log-level=error --outfile=dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "index-vault-files": "echo \"Yaaaaaaassssss\" && exit 1"
+    "remark-obsidious": "bin/index-vault-files.ts"
   },
   "repository": {
     "type": "git",
