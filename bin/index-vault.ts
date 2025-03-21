@@ -91,7 +91,7 @@ const indexVault = async (dirents: Dirent[]) => {
     for (const ent of dirents) {
         const { name: filename, parentPath } = ent;
         const dirPath = path.relative(inDir, parentPath);
-        const filepath = dirPath ? `${dirPath}/${filename}` : filename;
+        const filepath = path.join(dirPath, filename);
         const isFile = ent.isFile();
         const isDirectory = ent.isDirectory();
         const id = hash(filepath);
