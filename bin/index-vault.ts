@@ -60,11 +60,11 @@ let ig: ignore.Ignore | undefined;
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
     ig = ignore().add(gitignoreData);
-    logger.info('In addition to ignoring .dotfiles, the following .gitignore rules will be applied:');
+    logger.info('.gitignore detected.  In addition to ignoring .dotfiles, will also ignore the following gitignore rules\n');
     logger.info(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
 }
 else {
-    logger.info('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
+    logger.warn('no file mask rules detected.  All files will be indexed!  (.dotfiles will still be ignored)');
 }
 
 const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
@@ -100,7 +100,7 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
  * manually tracking the parentPath in the indexer is a workaround for this.
  */
 async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<(Dirent & { parentPath: string })[]> {
-    logger.info('[info]: scanning directory: ', targetDir);
+    logger.info(`scanning directory: ${targetDir}`);
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
 
@@ -197,16 +197,16 @@ const indexVault = async (dirents: Dirent[]) => {
 
 try {
     const dirents = await getTargetDirents(inDir).catch((err) => {
-        logger.error('[ Error ] encountered while attempting to map vault files:  ', err, '\n');
+        logger.error('error encountered while attempting to map vault files:  ', err);
         process.exit(1);
     });
 
     const obsidiousVault = await indexVault(dirents);
 
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
-    logger.log('[ info ]: vault files index data has been saved as:', indexFilepath);
+    logger.log('vault files index data has been saved as:', indexFilepath);
 
 } catch (err) {
-    logger.error('[error]: Encountered an error while attempting to map vault files:', err);
+    logger.error('encountered an error while attempting to map vault files:', err);
     process.exit(1);
 }
