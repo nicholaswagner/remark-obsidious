@@ -1,6 +1,6 @@
 {
   "name": "remark-obsidious",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "main": "dist/index.js",
   "module": "dist/index.js",

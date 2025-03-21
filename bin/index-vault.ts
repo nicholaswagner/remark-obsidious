@@ -68,19 +68,44 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     });
 };
 
-async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
+// async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
+//     console.log('[info]: scanning directory: ', targetDir);
+//     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
+//     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
+//     let result: Dirent[] = [];
+//     for (const ent of filtered) {
+//         const currentPath = path.join(basePath, targetDir, ent.name);
+//         result.push(ent);
+//         if (ent.isDirectory()) {
+//             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
+//             result.push(...subDirents);
+//         }
+//     }
+//     return result;
+// }
+
+/**
+ * dirent.parentPath is still listed as experimental as of nodev23.10.  It was added in 18.17.0 and has had some issues along the way.
+ * manually tracking the parentPath in the indexer is a workaround for this.
+ */
+async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<(Dirent & { parentPath: string })[]> {
     console.log('[info]: scanning directory: ', targetDir);
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
-    let result: Dirent[] = [];
+
+    let result: (Dirent & { parentPath: string })[] = [];
+
     for (const ent of filtered) {
         const currentPath = path.join(basePath, targetDir, ent.name);
-        result.push(ent);
+        const enhancedEnt = Object.assign(ent, { parentPath: targetDir }); // Manually add parentPath
+        result.push(enhancedEnt);
+
         if (ent.isDirectory()) {
             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
             result.push(...subDirents);
         }
     }
+
     return result;
 }
 
