@@ -1,19 +1,18 @@
+export declare const ObsidiousVaultImageFiletypes: string[];
 export type ObsidiousVaultItem = {
     children?: ObsidiousVaultItem[];
-    extension?: string; // Always present for files (e.g., 'jpg', 'pdf')
+    extension?: string;
     filepath: string;
-    fileType: string; // it will be 'folder' | 'file'; (i'm not gonna pull in schema validation just for this one line)
+    fileType: string;
     id: string;
     label: string;
-    mtimeMs?: number; // last modified time in milliseconds
+    mtimeMs?: number;
 };
-
 export type ObsidiousFileTreeNode = {
     children?: ObsidiousFileTreeNode[];
     id: string;
     label: string;
-}
-
+};
 export type ObsidiousVaultData = {
     files: Record<string, ObsidiousVaultItem>;
     fileTree: ObsidiousFileTreeNode[];
@@ -22,8 +21,7 @@ export type ObsidiousVaultData = {
     idsByWebPath: Record<string, string>;
     imageIds: string[];
     stats: Record<string, any>;
-}
-
+};
 export type ObsidiousVaultInterface = ObsidiousVaultData & {
     initialize: (data: ObsidiousVaultData) => ObsidiousVaultData;
     getAllImageFiles: () => ObsidiousVaultItem[];
@@ -32,4 +30,7 @@ export type ObsidiousVaultInterface = ObsidiousVaultData & {
     getFileForWebPathSlug: (webPath: string) => ObsidiousVaultItem | null;
     getFilesByExtension: (extension: string) => ObsidiousVaultItem[];
     getFileTree: () => ObsidiousFileTreeNode[];
-}
+};
+declare const ObsidiousVault: ObsidiousVaultInterface;
+export { ObsidiousVault };
+//# sourceMappingURL=ObsidiousVault.d.ts.map

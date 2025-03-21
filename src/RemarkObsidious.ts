@@ -3,13 +3,30 @@ import { visit } from 'unist-util-visit';
 import { Plugin } from "unified";
 import { Root } from 'mdast';
 
-import { slugify } from './utils';
+import { slugify } from './ObsidiousUtils';
 import createVisitObsidianEmbeds from './createVisitObsidianEmbeds';
 import createVisitObsidianCallouts from './createVisitObsidianCallouts';
 import createVisitObsidianHilights from './createVisitObsidianHilights';
 
-import type { ObsidiousVaultItem } from './types/Obsidious';
-import type { RemarkObsidiousOptions } from './types/RemarkObsidious';
+import type { ObsidiousVaultItem } from './ObsidiousVault'
+
+export type RemarkObsidiousOptions = {
+    basePath: string;
+    classNames: {
+        calloutClassName: string;
+        calloutIsFoldableClassName: string;
+        calloutTitleClassName: string;
+        errorClassName: string;
+        hilightClassName: string;
+        imageClassName: string;
+        linkClassName: string;
+        embeddedMdClassName: string;
+    };
+    filePathPrefix: string;
+    slugify: typeof slugify;
+    getFileMetaForLabel: (_label: string) => ObsidiousVaultItem | null;
+};
+
 
 export type ObsidiousOptions = Partial<RemarkObsidiousOptions>;
 

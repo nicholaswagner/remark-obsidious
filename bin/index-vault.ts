@@ -1,20 +1,19 @@
 #!/usr/bin/env -S npx tsx
 
-import yargs from 'yargs';
-import fs, { Dirent, readFileSync } from 'fs';
-import path from 'path';
-import { hash, slugify } from '../src/utils/';
+import * as fs from 'fs'
+import * as path from 'path';
+import { Dirent, readFileSync } from 'fs';
+import { hash, slugify } from '../src/ObsidiousUtils';
 import ignore from 'ignore';
+import yargs from 'yargs';
 
 import type {
     ObsidiousVaultItem,
     ObsidiousVaultData,
-    ObsidiousFileTreeNode,
-} from '../src/types/Obsidious';
+    ObsidiousFileTreeNode
+} from '../src/ObsidiousVault';
 
-
-//These are pulled from https://help.obsidian.md/file-formats
-const obsidianImageTypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'svg', 'webp'];
+import { ObsidiousVaultImageFiletypes } from '../src/ObsidiousVault';
 
 const argv = await yargs(process.argv.slice(2))
     .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
@@ -110,7 +109,7 @@ const indexVault = async (dirents: Dirent[]) => {
         const segments = filepath.split('/');
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i];
-            const isLastSegment = i === segments.length - 1;
+            // const isLastSegment = i === segments.length - 1;
             const existingChild = currentTree.children?.find((child) => child.label === part);
 
             if (!existingChild) {
@@ -135,7 +134,7 @@ const indexVault = async (dirents: Dirent[]) => {
 
                 if (extension) {
                     (obsidiousVault.idsByExtension[extension] = obsidiousVault.idsByExtension[extension] || []).push(id);
-                    if (obsidianImageTypes.includes(extension)) {
+                    if (ObsidiousVaultImageFiletypes.includes(extension)) {
                         obsidiousVault.imageIds.push(id);
                     }
                 }

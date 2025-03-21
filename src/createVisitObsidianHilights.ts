@@ -1,6 +1,6 @@
 import { Visitor } from 'unist-util-visit';
 import { PhrasingContent } from 'mdast';
-import { RemarkObsidiousOptions } from './types/RemarkObsidious';
+import { RemarkObsidiousOptions } from './RemarkObsidious'
 import type { Text } from 'mdast';
 
 

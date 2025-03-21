@@ -1,7 +1,7 @@
 import { Visitor } from 'unist-util-visit';
 import { Literal, PhrasingContent } from 'mdast';
-import { RemarkObsidiousOptions } from './types/RemarkObsidious';
-import { slugifyFilepath } from './utils';
+import { RemarkObsidiousOptions } from './RemarkObsidious';
+import { slugifyFilepath } from './ObsidiousUtils';
 
 const obsidianEmbed = /!?\[\[[^\]]+\]\]/g; // Matches all the ![[...]] in the markdown
 const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Captures the link and optional alias from inside the ![[...]]

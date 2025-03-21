@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "bundler",
+      "declaration": true,
+      "declarationMap": true,
+      "declarationDir": "./dist/types",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "emitDeclarationOnly": true,
+      "baseUrl": "./src",
+    },
+    "include": [
+      "src/**/*.ts",
+    ]
+  }

@@ -1,6 +1,6 @@
 import { Visitor } from 'unist-util-visit';
 import type { Blockquote, Paragraph, Text } from 'mdast';
-import { RemarkObsidiousOptions } from './types/RemarkObsidious';
+import type { RemarkObsidiousOptions } from './RemarkObsidious'
 
 type ExtendedBlockquote = Blockquote & {
     data?: Blockquote["data"] & {
