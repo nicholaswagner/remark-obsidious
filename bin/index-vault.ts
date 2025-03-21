@@ -6,6 +6,7 @@ import { Dirent, readFileSync } from 'fs';
 import { hash, slugify } from '../src/ObsidiousUtils';
 import ignore from 'ignore';
 import yargs from 'yargs';
+import winston from 'winston';
 
 import type {
     ObsidiousVaultItem,
@@ -31,6 +32,15 @@ const indexFilepath = path.join(outDir, argv.indexName);
 const gitignorePath = argv.ignore || path.join(inDir, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
 
+const logger = winston.createLogger({
+    level: 'info', // Set the log level
+    transports: [
+        new winston.transports.File({ filename: 'obsidious.log' }), // Write logs to a file
+        new winston.transports.Console({ format: winston.format.simple() }) // Optional: also log to the console
+    ]
+});
+
+
 const obsidiousVault: ObsidiousVaultData = {
     files: {},
     fileTree: [],
@@ -46,14 +56,15 @@ const Tree: ObsidiousFileTreeNode = { id: hash('root'), label: '', children: [] 
 
 let ig: ignore.Ignore | undefined;
 
+
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
     ig = ignore().add(gitignoreData);
-    console.log('[info]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied:');
-    console.log(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
+    logger.info('In addition to ignoring .dotfiles, the following .gitignore rules will be applied:');
+    logger.info(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
 }
 else {
-    console.log('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
+    logger.info('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
 }
 
 const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
@@ -89,7 +100,7 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
  * manually tracking the parentPath in the indexer is a workaround for this.
  */
 async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<(Dirent & { parentPath: string })[]> {
-    console.log('[info]: scanning directory: ', targetDir);
+    logger.info('[info]: scanning directory: ', targetDir);
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
 
@@ -125,7 +136,7 @@ const indexVault = async (dirents: Dirent[]) => {
         try {
             stats = await fs.promises.stat(path.join(parentPath, filename));
         } catch (error) {
-            console.error(`Error getting stats for file ${filepath}:`, error);
+            logger.error(`Error getting stats for file ${filepath}:`, error);
             stats = { mtimeMs: 0 }; // Default value to prevent undefined access
         }
 
@@ -186,16 +197,16 @@ const indexVault = async (dirents: Dirent[]) => {
 
 try {
     const dirents = await getTargetDirents(inDir).catch((err) => {
-        console.error('\n[ Error ] encountered while attempting to map vault files:  ', err, '\n');
+        logger.error('[ Error ] encountered while attempting to map vault files:  ', err, '\n');
         process.exit(1);
     });
 
     const obsidiousVault = await indexVault(dirents);
 
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
-    console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
+    logger.log('[ info ]: vault files index data has been saved as:', indexFilepath);
 
 } catch (err) {
-    console.error('[error]: Encountered an error while attempting to map vault files:', err);
+    logger.error('[error]: Encountered an error while attempting to map vault files:', err);
     process.exit(1);
 }
