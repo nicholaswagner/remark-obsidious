@@ -21,10 +21,12 @@ const argv = await yargs(process.argv.slice(2))
     .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where the index files will be written.' })
     .option('indexName', { type: 'string', default: 'obsidious-index.json', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
     .option('ignore', { type: 'string', describe: 'path to gitignore which will filter the vault' })
+    .option('logging', { type: 'boolean', default: false, describe: 'enable logging' })
     .help()
     .alias('h', 'help')
     .argv;
 
+const logName = 'obsidious.log';
 const inDir = path.resolve(argv.in);
 const outDir = path.resolve(argv.out);
 const indexFilepath = path.join(outDir, argv.indexName);
@@ -35,9 +37,10 @@ const gitignoreExists = fs.existsSync(gitignorePath)
 const logger = winston.createLogger({
     level: 'info', // Set the log level
     transports: [
-        new winston.transports.File({ filename: 'obsidious.log' }), // Write logs to a file
-        new winston.transports.Console({ format: winston.format.simple() }) // Optional: also log to the console
-    ]
+        new winston.transports.File({ filename: logName }), // Write logs to a file
+        // new winston.transports.Console({ format: winston.format.simple() }) // Optional: also log to the console
+    ],
+    silent: argv.logging === false // Disable logging if --logging is not set
 });
 
 
@@ -59,8 +62,9 @@ let ig: ignore.Ignore | undefined;
 
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
-    ig = ignore().add(gitignoreData);
-    logger.info('.gitignore detected.  In addition to ignoring .dotfiles, will also ignore the following gitignore rules\n');
+    ig = ignore().add(gitignoreData).add(logName);
+    console.log('.gitignore detected, in addition to ignoring dotfiles the following rules will be applied:');
+    console.log(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
     logger.info(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
 }
 else {
@@ -100,10 +104,10 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
  * manually tracking the parentPath in the indexer is a workaround for this.
  */
 async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<(Dirent & { parentPath: string })[]> {
-    logger.info(`scanning directory: ${targetDir}`);
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
 
+    logger.info({ directory: targetDir, fileCount: ents.length, ignoredCount: ents.length - filtered.length });
     let result: (Dirent & { parentPath: string })[] = [];
 
     for (const ent of filtered) {
@@ -197,6 +201,7 @@ const indexVault = async (dirents: Dirent[]) => {
 
 try {
     const dirents = await getTargetDirents(inDir).catch((err) => {
+        console.error('error encountered while attempting to map vault files:  ', err);
         logger.error('error encountered while attempting to map vault files:  ', err);
         process.exit(1);
     });
@@ -204,9 +209,11 @@ try {
     const obsidiousVault = await indexVault(dirents);
 
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
-    logger.log('vault files index data has been saved as:', indexFilepath);
+    console.log('Indexing complete.  Vault files have been saved to ', indexFilepath);
+    logger.info('Indexing complete.  Vault files have been saved to ', indexFilepath);
 
 } catch (err) {
+    console.error('encountered an error while attempting to map vault files:', err);
     logger.error('encountered an error while attempting to map vault files:', err);
     process.exit(1);
 }
