@@ -22,7 +22,7 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 - [x] `[[internal links]]` with roll-over previews
 - [x] `[[internal link | with alias]]`
 - [x] `[[internal link#heading-anchor]]`
-- [ ] `[[internal link#heading| alias]]`
+- [x] `[[internal link#heading| alias]]`
 - [x] `![[embed images]]`
 - [x] `![[embedded markdown]]`
 - [x] `![[embedded markdown#heading]]`
