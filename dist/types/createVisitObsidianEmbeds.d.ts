@@ -5,6 +5,6 @@ import { RemarkObsidiousOptions } from './RemarkObsidious';
  * Creates a visitor function that processes Obsidian links and embeds in markdown nodes.
  * When links are encountered,
  */
-declare const createVisitObsidianEmbeds: ({ basePath, classNames, filePathPrefix, getFileMetaForLabel, slugify }: RemarkObsidiousOptions) => Visitor<Literal>;
+declare const createVisitObsidianEmbeds: ({ basePath, classNames, filePathPrefix, getVaultItemByLabelSlug, slugify }: RemarkObsidiousOptions) => Visitor<Literal>;
 export default createVisitObsidianEmbeds;
 //# sourceMappingURL=createVisitObsidianEmbeds.d.ts.map

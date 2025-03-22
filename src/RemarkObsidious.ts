@@ -8,7 +8,7 @@ import createVisitObsidianEmbeds from './createVisitObsidianEmbeds';
 import createVisitObsidianCallouts from './createVisitObsidianCallouts';
 import createVisitObsidianHilights from './createVisitObsidianHilights';
 
-import type { ObsidiousVaultItem } from './ObsidiousVault'
+import { ObsidiousVault, type ObsidiousVaultItem } from './ObsidiousVault'
 
 export type RemarkObsidiousOptions = {
     basePath: string;
@@ -24,7 +24,7 @@ export type RemarkObsidiousOptions = {
     };
     filePathPrefix: string;
     slugify: typeof slugify;
-    getFileMetaForLabel: (_label: string) => ObsidiousVaultItem | null;
+    getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVaultItem | null;
 };
 
 
@@ -44,7 +44,7 @@ const defaultConfig: RemarkObsidiousOptions = {
     },
     filePathPrefix: '/vault/',
     slugify,
-    getFileMetaForLabel: (_label: string): ObsidiousVaultItem | null => null,
+    getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVault.getFileForLabelSlug(labelSlug),
 };
 
 const RemarkObsidious: Plugin<[ObsidiousOptions], Root> = (options?: ObsidiousOptions): Transformer<Root, Root> => {

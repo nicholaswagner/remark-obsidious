@@ -6,6 +6,9 @@ import { Dirent, readFileSync } from 'fs';
 import { hash, slugify } from '../src/ObsidiousUtils';
 import ignore from 'ignore';
 import yargs from 'yargs';
+import winston from 'winston';
+
+const NPM_PACKAGE_VERSION = '0.5.0';
 
 import type {
     ObsidiousVaultItem,
@@ -16,20 +19,33 @@ import type {
 import { ObsidiousVaultImageFiletypes } from '../src/ObsidiousVault';
 
 const argv = await yargs(process.argv.slice(2))
-    .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
-    .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where the index files will be written.' })
-    .option('indexName', { type: 'string', default: 'obsidious-index.json', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
-    .option('ignore', { type: 'string', describe: 'path to gitignore which will filter the vault' })
+    .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where indexing should begin' })
+    .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where the resulting index json should be written to' })
+    .option('logs', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where obsidian-index.log is written' })
+    .option('indexName', { type: 'string', default: 'obsidious-index', demandOption: false, describe: 'override the default obsidian-index.json file name' })
+    .option('ignore', { type: 'string', describe: 'if specified, this .gitignore will be used to filter the indexed items' })
     .help()
+    .version(NPM_PACKAGE_VERSION)
+    .alias('v', 'version')
     .alias('h', 'help')
     .argv;
 
+const logName = argv.indexName + '.log';
 const inDir = path.resolve(argv.in);
 const outDir = path.resolve(argv.out);
-const indexFilepath = path.join(outDir, argv.indexName);
+const logsDir = path.resolve(argv.logs);
+const indexFilepath = path.join(outDir, argv.indexName + '.json');
 
 const gitignorePath = argv.ignore || path.join(inDir, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
+
+const logger = winston.createLogger({
+    level: 'info', // Set the log level
+    transports: [
+        new winston.transports.File({ dirname: logsDir, filename: logName, })
+    ],
+});
+
 
 const obsidiousVault: ObsidiousVaultData = {
     files: {},
@@ -46,14 +62,16 @@ const Tree: ObsidiousFileTreeNode = { id: hash('root'), label: '', children: [] 
 
 let ig: ignore.Ignore | undefined;
 
+
 if (gitignoreExists) {
     const gitignoreData = readFileSync(gitignorePath, 'utf8').toString();
-    ig = ignore().add(gitignoreData);
-    console.log('[info]: In addition to ignoring .dotfiles, the following .gitignore rules will be applied:');
+    ig = ignore().add(gitignoreData).add(logName);
+    console.log('.gitignore detected, in addition to ignoring dotfiles the following rules will be applied:');
     console.log(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
+    logger.info(gitignoreData.split('\n').filter((line) => line && !line.startsWith('#')));
 }
 else {
-    console.log('[info]: No file mask rules detected, all files (except .dotfiles) will be indexed.');
+    logger.warn('no file mask rules detected.  All files will be indexed!  (.dotfiles will still be ignored)');
 }
 
 const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
@@ -68,19 +86,28 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
     });
 };
 
-async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
-    console.log('[info]: scanning directory: ', targetDir);
+/**
+ * dirent.parentPath is still listed as experimental as of nodev23.10.  It was added in 18.17.0 and has had some issues along the way.
+ * manually tracking the parentPath in the indexer is a workaround for this.
+ */
+async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<(Dirent & { parentPath: string })[]> {
     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
-    let result: Dirent[] = [];
+
+    logger.info({ directory: targetDir, fileCount: ents.length, ignoredCount: ents.length - filtered.length });
+    let result: (Dirent & { parentPath: string })[] = [];
+
     for (const ent of filtered) {
         const currentPath = path.join(basePath, targetDir, ent.name);
-        result.push(ent);
+        const enhancedEnt = Object.assign(ent, { parentPath: targetDir }); // Manually add parentPath
+        result.push(enhancedEnt);
+
         if (ent.isDirectory()) {
             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
             result.push(...subDirents);
         }
     }
+
     return result;
 }
 
@@ -91,7 +118,7 @@ const indexVault = async (dirents: Dirent[]) => {
     for (const ent of dirents) {
         const { name: filename, parentPath } = ent;
         const dirPath = path.relative(inDir, parentPath);
-        const filepath = dirPath ? `${dirPath}/${filename}` : filename;
+        const filepath = path.join(dirPath, filename);
         const isFile = ent.isFile();
         const isDirectory = ent.isDirectory();
         const id = hash(filepath);
@@ -100,7 +127,7 @@ const indexVault = async (dirents: Dirent[]) => {
         try {
             stats = await fs.promises.stat(path.join(parentPath, filename));
         } catch (error) {
-            console.error(`Error getting stats for file ${filepath}:`, error);
+            logger.error(`Error getting stats for file ${filepath}:`, error);
             stats = { mtimeMs: 0 }; // Default value to prevent undefined access
         }
 
@@ -109,7 +136,6 @@ const indexVault = async (dirents: Dirent[]) => {
         const segments = filepath.split('/');
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i];
-            // const isLastSegment = i === segments.length - 1;
             const existingChild = currentTree.children?.find((child) => child.label === part);
 
             if (!existingChild) {
@@ -120,7 +146,6 @@ const indexVault = async (dirents: Dirent[]) => {
 
                 const vaultItem: ObsidiousVaultItem = {
                     ...(isFile ? { extension } : {}),
-                    ...(children ? { children } : {}),
                     ...(stats?.mtimeMs ? { mtimeMs: stats.mtimeMs } : {}),
                     filepath,
                     fileType: isFile ? 'file' : 'folder',
@@ -161,16 +186,19 @@ const indexVault = async (dirents: Dirent[]) => {
 
 try {
     const dirents = await getTargetDirents(inDir).catch((err) => {
-        console.error('\n[ Error ] encountered while attempting to map vault files:  ', err, '\n');
+        console.error('error encountered while attempting to map vault files:  ', err);
+        logger.error('error encountered while attempting to map vault files:  ', err);
         process.exit(1);
     });
 
     const obsidiousVault = await indexVault(dirents);
 
     fs.writeFileSync(indexFilepath, JSON.stringify(obsidiousVault, null, 2));
-    console.log(`[ info ]: vault files index data has been saved as:    ${indexFilepath}`);
+    console.log('Indexing complete.  Vault files have been saved to ', indexFilepath);
+    logger.info('Indexing complete.  Vault files have been saved to ', indexFilepath);
 
 } catch (err) {
-    console.error('[error]: Encountered an error while attempting to map vault files:', err);
+    console.error('encountered an error while attempting to map vault files:', err);
+    logger.error('encountered an error while attempting to map vault files:', err);
     process.exit(1);
 }

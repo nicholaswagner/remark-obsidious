@@ -8,6 +8,8 @@ import ignore from 'ignore';
 import yargs from 'yargs';
 import winston from 'winston';
 
+const NPM_PACKAGE_VERSION = '0.5.0';
+
 import type {
     ObsidiousVaultItem,
     ObsidiousVaultData,
@@ -17,19 +19,22 @@ import type {
 import { ObsidiousVaultImageFiletypes } from '../src/ObsidiousVault';
 
 const argv = await yargs(process.argv.slice(2))
-    .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where file indexing begins. This is usually your obsidian vault.' })
-    .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'The directory where the index files will be written.' })
-    .option('indexName', { type: 'string', default: 'obsidious-index.json', demandOption: false, describe: 'Use a custom name for the resulting obsidious-index.json' })
-    .option('ignore', { type: 'string', describe: 'path to gitignore which will filter the vault' })
-    .option('logging', { type: 'boolean', default: false, describe: 'enable logging' })
+    .option('in', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where indexing should begin' })
+    .option('out', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where the resulting index json should be written to' })
+    .option('logs', { type: 'string', default: process.cwd(), demandOption: false, describe: 'the directory where obsidian-index.log is written' })
+    .option('indexName', { type: 'string', default: 'obsidious-index', demandOption: false, describe: 'override the default obsidian-index.json file name' })
+    .option('ignore', { type: 'string', describe: 'if specified, this .gitignore will be used to filter the indexed items' })
     .help()
+    .version(NPM_PACKAGE_VERSION)
+    .alias('v', 'version')
     .alias('h', 'help')
     .argv;
 
-const logName = 'obsidious.log';
+const logName = argv.indexName + '.log';
 const inDir = path.resolve(argv.in);
 const outDir = path.resolve(argv.out);
-const indexFilepath = path.join(outDir, argv.indexName);
+const logsDir = path.resolve(argv.logs);
+const indexFilepath = path.join(outDir, argv.indexName + '.json');
 
 const gitignorePath = argv.ignore || path.join(inDir, '.gitignore');
 const gitignoreExists = fs.existsSync(gitignorePath)
@@ -37,10 +42,8 @@ const gitignoreExists = fs.existsSync(gitignorePath)
 const logger = winston.createLogger({
     level: 'info', // Set the log level
     transports: [
-        new winston.transports.File({ filename: logName }), // Write logs to a file
-        // new winston.transports.Console({ format: winston.format.simple() }) // Optional: also log to the console
+        new winston.transports.File({ dirname: logsDir, filename: logName, })
     ],
-    silent: argv.logging === false // Disable logging if --logging is not set
 });
 
 
@@ -82,22 +85,6 @@ const filterIgnored = (files: Dirent[], basePath: string): Dirent[] => {
         return true;
     });
 };
-
-// async function getTargetDirents(targetDir: string, basePath: string = ''): Promise<Dirent[]> {
-//     console.log('[info]: scanning directory: ', targetDir);
-//     const ents = await fs.promises.readdir(targetDir, { withFileTypes: true });
-//     const filtered = filterIgnored(ents, path.join(basePath, targetDir));
-//     let result: Dirent[] = [];
-//     for (const ent of filtered) {
-//         const currentPath = path.join(basePath, targetDir, ent.name);
-//         result.push(ent);
-//         if (ent.isDirectory()) {
-//             const subDirents = await getTargetDirents(path.join(targetDir, ent.name), currentPath);
-//             result.push(...subDirents);
-//         }
-//     }
-//     return result;
-// }
 
 /**
  * dirent.parentPath is still listed as experimental as of nodev23.10.  It was added in 18.17.0 and has had some issues along the way.
@@ -149,7 +136,6 @@ const indexVault = async (dirents: Dirent[]) => {
         const segments = filepath.split('/');
         for (let i = 0; i < segments.length; i++) {
             const part = segments[i];
-            // const isLastSegment = i === segments.length - 1;
             const existingChild = currentTree.children?.find((child) => child.label === part);
 
             if (!existingChild) {
@@ -160,7 +146,6 @@ const indexVault = async (dirents: Dirent[]) => {
 
                 const vaultItem: ObsidiousVaultItem = {
                     ...(isFile ? { extension } : {}),
-                    ...(children ? { children } : {}),
                     ...(stats?.mtimeMs ? { mtimeMs: stats.mtimeMs } : {}),
                     filepath,
                     fileType: isFile ? 'file' : 'folder',

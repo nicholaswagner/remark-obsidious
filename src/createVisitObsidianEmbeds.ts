@@ -11,7 +11,7 @@ const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Ca
  * Creates a visitor function that processes Obsidian links and embeds in markdown nodes.
  * When links are encountered, 
  */
-const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFileMetaForLabel, slugify }: RemarkObsidiousOptions): Visitor<Literal> => {
+const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVaultItemByLabelSlug, slugify }: RemarkObsidiousOptions): Visitor<Literal> => {
     const { linkClassName, imageClassName, errorClassName, embeddedMdClassName } = classNames;
     return (node, index, parent) => {
         if (!node.value || typeof node.value !== 'string' || !parent || index === undefined) return;
@@ -35,11 +35,11 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
             const urlParamsIndex = params[1].indexOf('#');
             const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1) : '';
             const isCarotParams = urlParams.startsWith('^');
-            const file = getFileMetaForLabel(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
-            const title = isCarotParams ? `${file?.label} > ${urlParams.slice(1)}` : params[1];
+            const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
+            const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
 
-            if (!file) {
-                console.error(file);
+            if (!vaultItem) {
+                console.error(vaultItem);
                 results.push({
                     type: 'text',
                     value: `"${params[1]}" could not be found`,
@@ -47,9 +47,9 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                 });
             } else {
                 if (params[0].startsWith('!')) {
-                    const src = file.filepath;
+                    const src = vaultItem.filepath;
 
-                    if (file.extension === 'md') {
+                    if (vaultItem.extension === 'md') {
                         /** if embedding a markdown file, change the parent element from <p> to <div> */
                         parent.data = {
                             ...parent.data,
@@ -57,7 +57,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                             hProperties: {
                                 className: embeddedMdClassName,
                                 options: params[2] ?? undefined,
-                                'data-file-id': file.id,
+                                'data-file-id': vaultItem.id,
                                 'data-hash-params': slugify(urlParams),
                             }
                         }
@@ -72,30 +72,31 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getFi
                                     className: imageClassName,
                                     options: params[2] ?? undefined,
                                     src: filePathPrefix + src,
-                                    'data-ext': file.extension,
+                                    'data-ext': vaultItem.extension,
                                     'data-hash-params': slugify(urlParams),
-                                    'data-label': file.label,
+                                    'data-label': vaultItem.label,
                                 },
                             },
                         });
                     }
 
                 } else {
+                    const hash = urlParams ? `#${slugify(urlParams)}` : '';
                     results.push({
                         type: 'link',
-                        url: basePath + slugifyFilepath(file.filepath, file.extension) + urlParams,
-                        title,
+                        url: basePath + slugifyFilepath(vaultItem.filepath, vaultItem.extension) + hash,
+                        title: params[2] ?? title,
                         data: {
                             hProperties: {
                                 className: linkClassName,
                                 options: params[2] ?? undefined,
-                                src: filePathPrefix + file.filepath,
-                                'data-ext': file.extension,
+                                src: filePathPrefix + vaultItem.filepath,
+                                'data-ext': vaultItem.extension,
                                 'data-hash-params': slugify(urlParams),
-                                'data-label': file.label,
+                                'data-label': vaultItem.label,
                             },
                         },
-                        children: [{ type: 'text', value: title }],
+                        children: [{ type: 'text', value: params[2] ?? title }],
                     });
                 }
             }

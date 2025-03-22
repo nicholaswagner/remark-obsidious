@@ -1,7 +1,7 @@
 import { Plugin } from "unified";
 import { Root } from 'mdast';
 import { slugify } from './ObsidiousUtils';
-import type { ObsidiousVaultItem } from './ObsidiousVault';
+import { type ObsidiousVaultItem } from './ObsidiousVault';
 export type RemarkObsidiousOptions = {
     basePath: string;
     classNames: {
@@ -16,7 +16,7 @@ export type RemarkObsidiousOptions = {
     };
     filePathPrefix: string;
     slugify: typeof slugify;
-    getFileMetaForLabel: (_label: string) => ObsidiousVaultItem | null;
+    getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVaultItem | null;
 };
 export type ObsidiousOptions = Partial<RemarkObsidiousOptions>;
 declare const RemarkObsidious: Plugin<[ObsidiousOptions], Root>;

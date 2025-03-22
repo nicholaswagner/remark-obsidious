@@ -4,8 +4,7 @@ export const ObsidiousVaultImageFiletypes = ['avif', 'bmp', 'gif', 'jpeg', 'jpg'
 
 
 export type ObsidiousVaultItem = {
-    children?: ObsidiousVaultItem[];
-    extension?: string; // Always present for files (e.g., 'jpg', 'pdf')
+    extension?: string; // Always present for files (e.g., 'jpg', 'pdf' etc)
     filepath: string;
     fileType: string; // it will be 'folder' | 'file'; (i'm not gonna pull in schema validation just for this one line)
     id: string;

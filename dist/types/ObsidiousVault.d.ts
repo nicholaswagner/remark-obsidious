@@ -1,6 +1,5 @@
 export declare const ObsidiousVaultImageFiletypes: string[];
 export type ObsidiousVaultItem = {
-    children?: ObsidiousVaultItem[];
     extension?: string;
     filepath: string;
     fileType: string;

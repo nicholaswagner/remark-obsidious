@@ -1,22 +1,23 @@
 {
   "name": "remark-obsidious",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "type": "module",
   "scripts": {
+    "spotcheck": "tsc -p tsconfig.types.json --noEmit",
     "trace": "tsc --traceResolution",
     "postinstall": "shx chmod +x ./bin/*",
-    "dev": "tsx esbuild.config.ts",
-    "build": "esbuild src/index.ts --bundle --minify --format=esm --sourcemap --log-level=error --outfile=dist/index.js",
-    "postbuild": "tsc -p tsconfig.types.json",
-    "build:bin": "shx cp -R scripts/* bin/ && shx chmod +x bin/*",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=debug --outfile=dist/index.js --color --watch",
+    "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
+    "postbuild": "tsc -p tsconfig.types.json && npm run build:bin",
+    "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",
+    "prebuild": "tsx scripts/sync-npm-package-version.ts"
   },
   "bin": {
-    "remark-obsidious": "bin/index-vault.ts"
+    "obsidious": "bin/obsidious.ts"
   },
   "repository": {
     "type": "git",
@@ -29,7 +30,6 @@
     "obsidian",
     "markdown",
     "transformer",
-    "transformers",
     "obsidious"
   ],
   "author": "nicholaswagner",
@@ -39,20 +39,22 @@
   },
   "homepage": "https://github.com/nicholaswagner/remark-obsidious#readme",
   "dependencies": {
+    "ignore": "^7.0.3",
+    "mdast-util-to-hast": "^13.2.0",
+    "shx": "^0.4.0",
+    "tsx": "^4.19.3",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "winston": "^3.17.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
     "@types/node": "^22.13.10",
     "@types/yargs": "^17.0.33",
     "esbuild": "0.25.1",
     "eslint-import-resolver-typescript": "^4.1.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "ignore": "^7.0.3",
-    "mdast-util-to-hast": "^13.2.0",
-    "shx": "^0.4.0",
-    "tsx": "^4.19.3",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
-    "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0",
-    "winston": "^3.17.0",
-    "yargs": "^17.7.2"
+    "typescript-eslint": "^8.26.1"
   }
 }
