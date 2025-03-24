@@ -20,7 +20,7 @@ export type RemarkObsidiousOptions = {
         hilightClassName: string;
         imageClassName: string;
         linkClassName: string;
-        embeddedMdClassName: string;
+        mdClassName: string;
     };
     filePathPrefix: string;
     slugify: typeof slugify;
@@ -33,7 +33,7 @@ export type ObsidiousOptions = Partial<Omit<RemarkObsidiousOptions, 'classNames'
 }>;
 
 export const DefaultRemarkObsidiousOptions: RemarkObsidiousOptions = {
-    basePath: './',
+    basePath: '',
     classNames: {
         calloutClassName: 'callout',
         calloutIsFoldableClassName: 'foldable',
@@ -42,9 +42,9 @@ export const DefaultRemarkObsidiousOptions: RemarkObsidiousOptions = {
         hilightClassName: 'obsidian-hilight',
         imageClassName: 'obsidian-img',
         linkClassName: 'obsidian-link',
-        embeddedMdClassName: 'obsidian-md-embed ',
+        mdClassName: 'obsidian-md-embed ',
     },
-    filePathPrefix: '/vault/',
+    filePathPrefix: '',
     slugify,
     getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVault.getFileForLabelSlug(labelSlug),
 };

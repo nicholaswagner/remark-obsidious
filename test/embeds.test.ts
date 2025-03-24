@@ -2,38 +2,94 @@
 
 import { describe, it, expect } from "vitest";
 import { processMarkdown } from "./shared";
-import { DefaultRemarkObsidiousOptions as defaults, ObsidiousOptions } from "../src/index";
+import {
+    DefaultRemarkObsidiousOptions as defaults,
+    ObsidiousOptions,
+    ObsidiousVaultData,
+    ObsidiousVaultItem,
+    slugify
+} from "../src/index";
 import { JSDOM } from "jsdom";
-
-/**
- * The following is an example of a basic embed once transformed:
- * 
-*/
+import { mockVaultData, mockVaultItem, mockImageVaultItem } from "./shared";
 
 describe("![[local_embed]] feature", () => {
+
     const options: ObsidiousOptions = {
-        getVaultItemByLabelSlug: (labelSlug: string) => null
+        getVaultItemByLabelSlug: (labelSlug: string) => mockVaultData.files[mockVaultData.idsByLabelSlug[labelSlug]] || null,
     }
+
+    const errorClassName = defaults.classNames.errorClassName;
+
     it("should show error when no file found", async () => {
-        const input = `> ![[filename]]`;
-        const output = await processMarkdown(input);
-        console.log('\n\n', JSON.stringify(output, undefined, 3) + '\n\n');
+        const input = `> ![[bad vault item label]]`;
+        const output = await processMarkdown(input, options);
 
         const dom = new JSDOM(output);
         const document = dom.window.document;
-        const callout = document.querySelector('blockquote[data-callout]');
 
-        // Assert that the callout has the correct attributes and class name
-        expect(callout).not.toBeNull(); // Ensure the element exists
-        expect(callout?.getAttribute('data-callout')).toBe('callout');
-        expect(callout?.getAttribute('data-initial-folded')).toBe('false');
-        expect(callout?.getAttribute('data-title')).toBe('This is a callout');
-        expect(callout?.classList.contains(defaults.classNames.calloutClassName)).toBe(true);
+        const error = document.querySelector(`span.${errorClassName}`);
 
-        const title = callout?.querySelector('.callout-title');
-        expect(title?.textContent).toBe('This is a callout');
+        expect(error).not.toBeNull(); // Ensure the element exists
     });
 
+    it('should transform .md embeds', async () => {
+        const input = ` > ![[${mockVaultItem.label}]]`;
+        const output = await processMarkdown(input, options);
+        const dom = new JSDOM(output);
+        const document = dom.window.document;
 
+        const embed = document.querySelector(`.${defaults.classNames.mdClassName}`);
+
+        expect(embed?.getAttribute('data-file-id')).toBe(mockVaultItem.id);
+        expect(embed?.getAttribute('data-hash-params')).toBe('');
+        expect(embed?.getAttribute('options')).toBeNull();
+        expect(embed).not.toBeNull();
+    });
+
+    it('should transform image embeds', async () => {
+        const input = `![[${mockImageVaultItem.label}]]`;
+        const output = await processMarkdown(input, options);
+        const dom = new JSDOM(output);
+        const document = dom.window.document;
+
+        const embed = document.querySelector(`.${defaults.classNames.imageClassName}`);
+
+        expect(embed).not.toBeNull(); // confirms that image classname also exists
+        expect(embed?.getAttribute('data-ext')).toBe(mockImageVaultItem.extension);
+        expect(embed?.getAttribute('data-label')).toBe(mockImageVaultItem.label);
+        expect(embed?.getAttribute('alt')).toBe(mockImageVaultItem.label);
+        expect(embed?.getAttribute('options')).toBeNull();
+    });
+
+    it('should transform [[wiki links]]', async () => {
+        const header = 'some_header_ref';
+        const input = `[[${mockVaultItem.label}#${header}]]`;
+        const output = await processMarkdown(input, options);
+        const dom = new JSDOM(output);
+        const document = dom.window.document;
+
+        const embed = document.querySelector(`.${defaults.classNames.linkClassName}`);
+        expect(embed).not.toBeNull();
+        expect(embed?.getAttribute('src')).toBe(mockVaultItem.filepath);
+        expect(embed?.getAttribute('title')).toBe(`${mockVaultItem.label}#${header}`);
+        expect(embed?.getAttribute('data-ext')).toBe(mockVaultItem.extension);
+        expect(embed?.getAttribute('data-hash-params')).toBe(slugify(header));
+    });
+
+    it('should support aliases for links', async () => {
+        const header = 'some_header_ref';
+        const alias = 'An alternate link title';
+        const input = `[[${mockVaultItem.label}#${header} | ${alias}]]`;
+        const output = await processMarkdown(input, options);
+        const dom = new JSDOM(output);
+        const document = dom.window.document;
+
+        const embed = document.querySelector(`.${defaults.classNames.linkClassName}`);
+        expect(embed).not.toBeNull();
+        expect(embed?.getAttribute('src')).toBe(mockVaultItem.filepath);
+        expect(embed?.getAttribute('title')).toBe(`${alias}`);
+        expect(embed?.getAttribute('data-ext')).toBe(mockVaultItem.extension);
+        expect(embed?.getAttribute('data-hash-params')).toBe(slugify(header));
+    });
 
 });

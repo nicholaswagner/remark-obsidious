@@ -3,7 +3,16 @@ import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import { ObsidiousOptions, remarkObsidious, DefaultRemarkObsidiousOptions as defaults, ObsidiousVaultData, ObsidiousVaultItem, ObsidiousFileTreeNode } from "../src/index";
+import {
+    ObsidiousOptions,
+    remarkObsidious,
+    DefaultRemarkObsidiousOptions as defaults,
+    ObsidiousVaultData,
+    ObsidiousVaultItem,
+    ObsidiousFileTreeNode,
+    slugifyFilepath,
+    slugify
+} from "../src/index";
 
 
 const processMarkdown = async (markdown: string, options: ObsidiousOptions = {}) => {
@@ -20,47 +29,48 @@ const processMarkdown = async (markdown: string, options: ObsidiousOptions = {})
 };
 
 
-const mockVaultItem: ObsidiousVaultItem = {
+export const mockVaultItem: ObsidiousVaultItem = {
     extension: 'md',
-    id: 'id',
+    id: 'mockId',
     label: 'filename',
     filepath: 'vault/filename.md',
     fileType: 'file',
     mtimeMs: 0,
 }
 
-const mockFileTree: ObsidiousFileTreeNode[] = [
-    {
-        id: 'id',
-        label: 'filename',
-    }
-];
-
-const mockVaultDataEmpty: ObsidiousVaultData = {
-    files: {},
-    fileTree: [],
-    idsByExtension: {},
-    idsByLabelSlug: {},
-    idsByWebPath: {},
-    imageIds: [],
-    stats: {},
+export const mockImageVaultItem: ObsidiousVaultItem = {
+    extension: 'png',
+    id: 'mockPngId',
+    label: 'imageFilename.png',
+    filepath: 'vault/imageFilename.png',
+    fileType: 'file',
+    mtimeMs: 0,
 }
 
-const mockVaultData: ObsidiousVaultData = {
+const mockFileTree: ObsidiousFileTreeNode[] = [
+    { id: mockVaultItem.id, label: mockVaultItem.label },
+    { id: mockImageVaultItem.id, label: mockImageVaultItem.label }
+];
+
+export const mockVaultData: ObsidiousVaultData = {
     files: {
-        id: mockVaultItem,
+        [mockVaultItem.id]: mockVaultItem,
+        [mockImageVaultItem.id]: mockImageVaultItem,
     },
-    fileTree: [],
+    fileTree: mockFileTree,
     idsByExtension: {
-        md: ['id'],
+        md: [mockVaultItem.id],
+        png: [mockImageVaultItem.id]
     },
     idsByLabelSlug: {
-        filename: 'id',
+        [slugify(mockVaultItem.label)]: mockVaultItem.id, // in this case this is a valid label slug
+        [slugify(mockImageVaultItem.label)]: mockImageVaultItem.id, // in this case this is a valid label slug
     },
     idsByWebPath: {
-        'vault/filename.md': 'id',
+        [slugifyFilepath(mockVaultItem.filepath, mockVaultItem.extension)]: mockVaultItem.id,
+        [slugifyFilepath(mockImageVaultItem.filepath, mockImageVaultItem.extension)]: mockImageVaultItem.id,
     },
-    imageIds: [],
+    imageIds: [mockImageVaultItem.id],
     stats: {},
 
 }

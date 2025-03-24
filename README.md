@@ -69,9 +69,56 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 - [ ] Add Test coverage <-- in progress
 
 
-###### Feature creep
+###### Feature creep / future ideas
 - [ ] add support for `symlinks`
 - [ ] total vault filesize
 - [ ] consider the value of adding filesize for vaultItems vs increased index size
 - [ ] MDX support
 - [ ] consider some ~~excuses~~ ideas for [remark redirective](https://github.com/remarkjs/remark-directive) usage
+
+
+
+---
+
+### Coverage Report
+
+```sh
+
+> remark-obsidious@0.6.0 coverage
+> vitest run --coverage
+
+
+ RUN  v3.0.9 /Users/bricksandwich/Repos/remark-obsidious
+      Coverage enabled with v8
+
+ ✓ test/hilights.test.ts (3 tests) 7ms
+ ✓ test/callouts.test.ts (5 tests | 4 skipped) 17ms
+ ✓ test/embeds.test.ts (5 tests) 27ms
+
+ Test Files  3 passed (3)
+      Tests  9 passed | 4 skipped (13)
+   Start at  17:19:25
+   Duration  553ms (transform 41ms, setup 0ms, collect 259ms, tests 51ms, environment 495ms, prepare 96ms)
+
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   38.33 |    75.43 |      50 |   38.33 |                   
+ bin               |       0 |      100 |     100 |       0 |                   
+  obsidious.ts     |       0 |      100 |     100 |       0 | 3-204             
+ scripts           |       0 |      100 |     100 |       0 |                   
+  obsidious.ts     |       0 |      100 |     100 |       0 | 3-204             
+  ...ge-version.ts |       0 |      100 |     100 |       0 | 3-17              
+ src               |   81.85 |    74.07 |      40 |   81.85 |                   
+  ...diousUtils.ts |   25.58 |      100 |   66.66 |   25.58 | 57-101            
+  ...diousVault.ts |   78.78 |      100 |       0 |   78.78 | 45-48,56-58       
+  ...kObsidious.ts |     100 |      100 |      50 |     100 |                   
+  ...anCallouts.ts |     100 |    71.42 |     100 |     100 | 21,24,27,40       
+  ...dianEmbeds.ts |   89.58 |       72 |     100 |   89.58 | ...07-108,113-114 
+  ...anHilights.ts |   92.85 |    66.66 |     100 |   92.85 | 25-26             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------
+
+
+```

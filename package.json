@@ -1,6 +1,6 @@
 {
   "name": "remark-obsidious",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "exports": {
     ".": "./dist/index.js"
@@ -55,6 +55,7 @@
     "@types/jsdom": "^21.1.7",
     "@types/node": "^22.13.10",
     "@types/yargs": "^17.0.33",
+    "@vitest/coverage-v8": "^3.0.9",
     "@vitest/ui": "^3.0.9",
     "esbuild": "0.25.1",
     "eslint-import-resolver-typescript": "^4.1.1",
@@ -67,6 +68,7 @@
     "remark-stringify": "^11.0.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1",
+    "vite": "^6.2.3",
     "vitest": "^3.0.9"
   }
 }

@@ -12,7 +12,7 @@ const obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/; // Ca
  * When links are encountered, 
  */
 const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVaultItemByLabelSlug, slugify }: RemarkObsidiousOptions): Visitor<Literal> => {
-    const { linkClassName, imageClassName, errorClassName, embeddedMdClassName } = classNames;
+    const { linkClassName, imageClassName, errorClassName, mdClassName } = classNames;
     return (node, index, parent) => {
         if (!node.value || typeof node.value !== 'string' || !parent || index === undefined) return;
 
@@ -33,7 +33,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                 continue;
             }
             const urlParamsIndex = params[1].indexOf('#');
-            const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1) : '';
+            const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1).trim() : '';
             const isCarotParams = urlParams.startsWith('^');
             const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
             const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
@@ -56,7 +56,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                             ...parent.data,
                             hName: 'div',
                             hProperties: {
-                                className: embeddedMdClassName,
+                                className: mdClassName,
                                 options: params[2] ?? undefined,
                                 'data-file-id': vaultItem.id,
                                 'data-hash-params': slugify(urlParams),
@@ -74,7 +74,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                                     options: params[2] ?? undefined,
                                     src: fileUrl,
                                     'data-ext': vaultItem.extension,
-                                    'data-hash-params': slugify(urlParams),
                                     'data-label': vaultItem.label,
                                 },
                             },
