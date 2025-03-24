@@ -1,9 +1,10 @@
 {
   "name": "remark-obsidious",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "types": "dist/types/index.d.ts",
   "type": "module",
   "scripts": {
@@ -14,7 +15,9 @@
     "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
     "postbuild": "tsc -p tsconfig.types.json && npm run build:bin",
     "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",
-    "prebuild": "tsx scripts/sync-npm-package-version.ts"
+    "prebuild": "tsx scripts/sync-npm-package-version.ts",
+    "test": "vitest --ui --watch",
+    "coverage": "vitest run --coverage"
   },
   "bin": {
     "obsidious": "bin/obsidious.ts"
@@ -49,12 +52,21 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22.13.10",
     "@types/yargs": "^17.0.33",
+    "@vitest/ui": "^3.0.9",
     "esbuild": "0.25.1",
     "eslint-import-resolver-typescript": "^4.1.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "jsdom": "^26.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "remark-stringify": "^11.0.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.26.1",
+    "vitest": "^3.0.9"
   }
 }

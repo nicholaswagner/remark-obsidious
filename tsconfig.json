@@ -7,10 +7,14 @@
       "skipLibCheck": true,
       "strict": true,
       "noEmit": true,
-      "baseUrl": "./src",
     },
     "include": [
       "scripts/**/*.ts",
       "src/**/*.ts",
+      "test",
+    ],
+    "exclude": [
+      "node_modules",
+      "dist",
     ]
   }

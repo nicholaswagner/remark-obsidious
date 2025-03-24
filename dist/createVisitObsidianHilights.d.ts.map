@@ -1,0 +1,1 @@
+{"version":3,"file":"createVisitObsidianHilights.d.ts","sourceRoot":"","sources":["../src/createVisitObsidianHilights.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,kBAAkB,CAAC;AAE3C,OAAO,EAAE,sBAAsB,EAAE,MAAM,mBAAmB,CAAA;AAC1D,OAAO,KAAK,EAAE,IAAI,EAAE,MAAM,OAAO,CAAC;AAKlC,QAAA,MAAM,2BAA2B,GAAI,gBAAgB,sBAAsB,KAAG,OAAO,CAAC,IAAI,CAoCzF,CAAA;AAED,eAAe,2BAA2B,CAAC"}

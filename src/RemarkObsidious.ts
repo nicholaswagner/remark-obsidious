@@ -28,10 +28,12 @@ export type RemarkObsidiousOptions = {
 };
 
 
-export type ObsidiousOptions = Partial<RemarkObsidiousOptions>;
+export type ObsidiousOptions = Partial<Omit<RemarkObsidiousOptions, 'classNames'> & {
+    classNames?: Partial<RemarkObsidiousOptions['classNames']>;
+}>;
 
-const defaultConfig: RemarkObsidiousOptions = {
-    basePath: '/',
+export const DefaultRemarkObsidiousOptions: RemarkObsidiousOptions = {
+    basePath: './',
     classNames: {
         calloutClassName: 'callout',
         calloutIsFoldableClassName: 'foldable',
@@ -47,8 +49,16 @@ const defaultConfig: RemarkObsidiousOptions = {
     getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVault.getFileForLabelSlug(labelSlug),
 };
 
-const RemarkObsidious: Plugin<[ObsidiousOptions], Root> = (options?: ObsidiousOptions): Transformer<Root, Root> => {
-    const config = { ...defaultConfig, ...options };
+const RemarkObsidious: Plugin<[ObsidiousOptions?], Root> = (options: ObsidiousOptions = {}): Transformer<Root, Root> => {
+
+    const config: RemarkObsidiousOptions = {
+        ...DefaultRemarkObsidiousOptions,
+        ...options,
+        classNames: {
+            ...DefaultRemarkObsidiousOptions.classNames,
+            ...options?.classNames,
+        },
+    };
     const visitObsidianEmbeds = createVisitObsidianEmbeds({ ...config });
     const visitObsidianCallouts = createVisitObsidianCallouts({ ...config });
     const visitObsidianHilights = createVisitObsidianHilights({ ...config });

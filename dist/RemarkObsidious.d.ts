@@ -18,7 +18,10 @@ export type RemarkObsidiousOptions = {
     slugify: typeof slugify;
     getVaultItemByLabelSlug: (labelSlug: string) => ObsidiousVaultItem | null;
 };
-export type ObsidiousOptions = Partial<RemarkObsidiousOptions>;
-declare const RemarkObsidious: Plugin<[ObsidiousOptions], Root>;
+export type ObsidiousOptions = Partial<Omit<RemarkObsidiousOptions, 'classNames'> & {
+    classNames?: Partial<RemarkObsidiousOptions['classNames']>;
+}>;
+export declare const DefaultRemarkObsidiousOptions: RemarkObsidiousOptions;
+declare const RemarkObsidious: Plugin<[ObsidiousOptions?], Root>;
 export default RemarkObsidious;
 //# sourceMappingURL=RemarkObsidious.d.ts.map

@@ -38,6 +38,8 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
             const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
             const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
 
+            const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");
+
             if (!vaultItem) {
                 console.error(vaultItem);
                 results.push({
@@ -47,7 +49,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                 });
             } else {
                 if (params[0].startsWith('!')) {
-                    const src = vaultItem.filepath;
 
                     if (vaultItem.extension === 'md') {
                         /** if embedding a markdown file, change the parent element from <p> to <div> */
@@ -65,13 +66,13 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                     else {
                         results.push({
                             type: 'image',
-                            url: src,
+                            url: fileUrl,
                             alt: title,
                             data: {
                                 hProperties: {
                                     className: imageClassName,
                                     options: params[2] ?? undefined,
-                                    src: filePathPrefix + src,
+                                    src: fileUrl,
                                     'data-ext': vaultItem.extension,
                                     'data-hash-params': slugify(urlParams),
                                     'data-label': vaultItem.label,
@@ -84,13 +85,13 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                     const hash = urlParams ? `#${slugify(urlParams)}` : '';
                     results.push({
                         type: 'link',
-                        url: basePath + slugifyFilepath(vaultItem.filepath, vaultItem.extension) + hash,
+                        url: fileUrl + hash,
                         title: params[2] ?? title,
                         data: {
                             hProperties: {
                                 className: linkClassName,
                                 options: params[2] ?? undefined,
-                                src: filePathPrefix + vaultItem.filepath,
+                                src: fileUrl,
                                 'data-ext': vaultItem.extension,
                                 'data-hash-params': slugify(urlParams),
                                 'data-label': vaultItem.label,

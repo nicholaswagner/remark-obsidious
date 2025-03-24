@@ -28,7 +28,7 @@ const createVisitObsidianHilights = ({ classNames }: RemarkObsidiousOptions): Vi
             results.push({
                 type: 'text',
                 value: match[1],
-                data: { hName: 'span', hProperties: { className: hilightClassName } },
+                data: { hName: 'mark', hProperties: { className: hilightClassName } },
             });
 
             bufferIndex = match.index + match[0].length;

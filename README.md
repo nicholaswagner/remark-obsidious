@@ -13,9 +13,9 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
     - a lookup table organized by id for the vault items
     - some utility methods for working with the vault items
 
+---
 
 ### Tasks
----
 
 ##### `remark-obsidious` plugin features:
 - [x] `==hilight text==`
@@ -39,7 +39,7 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 - [x] should know what `image files` are supported by the vault
     - _(avif,bmp,gif,jpeg,jpg,png,svg,webp) per https://help.obsidian.md/file-formats_
 - [x] should have a `version` which matches the npm package semantic version
-- [ ] should probably run under `node LTS`
+- [ ] should probably run under `node LTS` - (I'm currently on v23 😜)
 
 ---
 
@@ -65,9 +65,13 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
     - `imageIds` a list of all the ids where the extension was a recognized obsidian image type
     - `stats` some stats about the vault
 
+---
+- [ ] Add Test coverage <-- in progress
 
 
 ###### Feature creep
 - [ ] add support for `symlinks`
 - [ ] total vault filesize
-- [ ] consider adding filesize for vaultItems
+- [ ] consider the value of adding filesize for vaultItems vs increased index size
+- [ ] MDX support
+- [ ] consider some ~~excuses~~ ideas for [remark redirective](https://github.com/remarkjs/remark-directive) usage

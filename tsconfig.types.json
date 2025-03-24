@@ -5,7 +5,7 @@
       "moduleResolution": "bundler",
       "declaration": true,
       "declarationMap": true,
-      "declarationDir": "./dist/types",
+      "declarationDir": "./dist",
       "esModuleInterop": true,
       "skipLibCheck": true,
       "strict": true,
