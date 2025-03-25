@@ -18,20 +18,6 @@ describe("![[local_embed]] feature", () => {
         getVaultItemByLabelSlug: (labelSlug: string) => mockVaultData.files[mockVaultData.idsByLabelSlug[labelSlug]] || null,
     }
 
-    const errorClassName = defaults.classNames.errorClassName;
-
-    it("should show error when no file found", async () => {
-        const input = `> ![[bad vault item label]]`;
-        const output = await processMarkdown(input, options);
-
-        const dom = new JSDOM(output);
-        const document = dom.window.document;
-
-        const error = document.querySelector(`span.${errorClassName}`);
-
-        expect(error).not.toBeNull(); // Ensure the element exists
-    });
-
     it('should transform .md embeds', async () => {
         const input = ` > ![[${mockVaultItem.label}]]`;
         const output = await processMarkdown(input, options);

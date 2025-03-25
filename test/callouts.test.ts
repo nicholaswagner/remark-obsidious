@@ -71,7 +71,7 @@ describe("Callouts feature", () => {
         expect(callout?.getAttribute('class')).toContain(defaults.classNames.calloutIsFoldableClassName);
     });
 
-    it.only("should support nested callouts", async () => {
+    it("should support nested callouts", async () => {
         const input = content;
         const output = await processMarkdown(input);
 

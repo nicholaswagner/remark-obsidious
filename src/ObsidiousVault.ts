@@ -38,7 +38,6 @@ export type ObsidiousVaultInterface = ObsidiousVaultData & {
     getFileTree: () => ObsidiousFileTreeNode[];
 }
 
-
 let vaultData: ObsidiousVaultData | null = null;
 
 const initialize = (data: ObsidiousVaultData): ObsidiousVaultInterface => {
