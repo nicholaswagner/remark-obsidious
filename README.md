@@ -10,7 +10,7 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 ---
 
 ### Latest build info: 
-- @latest build version is: <!-- <version> -->0.6.0<!-- <version/> -->
+- @latest build version is: <!-- <version> -->0.7.3<!-- <version/> -->
 
 ---
 
@@ -92,5 +92,3 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 
 
 ---
-
-### @latest code coverage report
