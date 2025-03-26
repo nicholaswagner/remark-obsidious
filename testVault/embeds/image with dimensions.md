@@ -1,0 +1,1 @@
+![[obsidious.png | 200x200]]

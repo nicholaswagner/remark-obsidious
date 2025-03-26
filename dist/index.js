@@ -1,2 +1,469 @@
-var V=function(e){if(e==null)return U;if(typeof e=="function")return v(e);if(typeof e=="object")return Array.isArray(e)?_(e):z(e);if(typeof e=="string")return K(e);throw new Error("Expected function, string, or object as test")};function _(e){let t=[],i=-1;for(;++i<e.length;)t[i]=V(e[i]);return v(a);function a(...s){let r=-1;for(;++r<t.length;)if(t[r].apply(this,s))return!0;return!1}}function z(e){let t=e;return v(i);function i(a){let s=a,r;for(r in e)if(s[r]!==t[r])return!1;return!0}}function K(e){return v(t);function t(i){return i&&i.type===e}}function v(e){return t;function t(i,a,s){return!!(X(i)&&e.call(this,i,typeof a=="number"?a:void 0,s||void 0))}}function U(){return!0}function X(e){return e!==null&&typeof e=="object"&&"type"in e}var w=[],E=!0,k=!1,R="skip";function A(e,t,i,a){let s;typeof t=="function"&&typeof i!="function"?(a=i,i=t):s=t;let r=V(s),n=a?-1:1;u(e,void 0,[])();function u(o,m,g){let d=o&&typeof o=="object"?o:{};if(typeof d.type=="string"){let l=typeof d.tagName=="string"?d.tagName:typeof d.name=="string"?d.name:void 0;Object.defineProperty(O,"name",{value:"node ("+(o.type+(l?"<"+l+">":""))+")"})}return O;function O(){let l=w,b,c,f;if((!t||r(o,m,g[g.length-1]||void 0))&&(l=H(i(o,g)),l[0]===k))return l;if("children"in o&&o.children){let x=o;if(x.children&&l[0]!==R)for(c=(a?x.children.length:-1)+n,f=g.concat(x);c>-1&&c<x.children.length;){let y=x.children[c];if(b=u(y,c,f)(),b[0]===k)return b;c=typeof b[1]=="number"?b[1]:c+n}}return l}}}function H(e){return Array.isArray(e)?e:typeof e=="number"?[E,e]:e==null?w:[e]}function N(e,t,i,a){let s,r,n;typeof t=="function"&&typeof i!="function"?(r=void 0,n=t,s=i):(r=t,n=i,s=a),A(e,r,u,s);function u(o,m){let g=m[m.length-1],d=g?g.children.indexOf(o):void 0;return n(o,d,g)}}var P=e=>e.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\/]+/g,"-").replace(/_+/g,"_").replace(/^_+|_+$/g,""),B=(e,t)=>P(t==="md"?e.replace(/\.md$/,""):e);function q(e){for(var t=0,i,a=0,s=e.length;s>=4;++a,s-=4)i=e.charCodeAt(a)&255|(e.charCodeAt(++a)&255)<<8|(e.charCodeAt(++a)&255)<<16|(e.charCodeAt(++a)&255)<<24,i=(i&65535)*1540483477+((i>>>16)*59797<<16),i^=i>>>24,t=(i&65535)*1540483477+((i>>>16)*59797<<16)^(t&65535)*1540483477+((t>>>16)*59797<<16);switch(s){case 3:t^=(e.charCodeAt(a+2)&255)<<16;case 2:t^=(e.charCodeAt(a+1)&255)<<8;case 1:t^=e.charCodeAt(a)&255,t=(t&65535)*1540483477+((t>>>16)*59797<<16)}return t^=t>>>13,t=(t&65535)*1540483477+((t>>>16)*59797<<16),((t^t>>>15)>>>0).toString(36)}var L=/!?\[\[[^\]]+\]\]/g,Y=/!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/,G=({basePath:e,classNames:t,filePathPrefix:i,getVaultItemByLabelSlug:a,slugify:s})=>{let{linkClassName:r,imageClassName:n,errorClassName:u,embeddedMdClassName:o}=t;return(m,g,d)=>{if(!m.value||typeof m.value!="string"||!d||g===void 0||!m.value?.match(L)?.length)return;let O=[...m.value.matchAll(L)],l=[],b=0;for(let c of O){b!==c.index&&l.push({type:"text",value:m.value.slice(b,c.index)});let f=c[0].match(Y);if(!f){l.push({type:"text",value:c[0]}),b=c.index+c[0].length;continue}let x=f[1].indexOf("#"),y=x!==-1?f[1].slice(x+1):"",M=y.startsWith("^"),h=a(s(x!==-1?f[1].slice(0,x):f[1])),T=M?`${h?.label} > ${y.slice(1)}`:f[1];if(!h)console.error(h),l.push({type:"text",value:`"${f[1]}" could not be found`,data:{hName:"span",hProperties:{className:u}}});else if(f[0].startsWith("!")){let F=h.filepath;h.extension==="md"?d.data={...d.data,hName:"div",hProperties:{className:o,options:f[2]??void 0,"data-file-id":h.id,"data-hash-params":s(y)}}:l.push({type:"image",url:F,alt:T,data:{hProperties:{className:n,options:f[2]??void 0,src:i+F,"data-ext":h.extension,"data-hash-params":s(y),"data-label":h.label}}})}else{let F=y?`#${s(y)}`:"";l.push({type:"link",url:e+B(h.filepath,h.extension)+F,title:f[2]??T,data:{hProperties:{className:r,options:f[2]??void 0,src:i+h.filepath,"data-ext":h.extension,"data-hash-params":s(y),"data-label":h.label}},children:[{type:"text",value:f[2]??T}]})}b=c.index+c[0].length}b<m.value.length&&l.push({type:"text",value:m.value.slice(b)}),typeof g=="number"&&d.children?d.children.splice(g,1,...l):d.children=l}},D=G;var j=/^\[\!\s*([\w-]+)\s*\]([-+]?)/,J=({classNames:e})=>{let{calloutClassName:t,calloutIsFoldableClassName:i,calloutTitleClassName:a}=e;return s=>{if(!Array.isArray(s.children)||s.children.length===0)return;let r=s.children.find(l=>l.type==="paragraph");if(!r||r.children.length===0)return;let n=r.children.find(l=>l.type==="text");if(!n||typeof n.value!="string"||n.value.trim()==="")return;let u=j.exec(n.value);if(!u)return;let o=u[1].toLowerCase(),m=u[2]||"",g=m!=="",d=m==="-";n.value=n.value.replace(j,"").trim();let O=n.value||o;s.data??={},s.data.hProperties={...s.data.hProperties,"data-callout":o,"data-initial-folded":String(d),"data-title":O,className:[t,g?i:""]},r.data??={},r.data.hProperties||(r.data.hProperties={}),r.data.hProperties={...r.data.hProperties,className:[a],"data-callout":o,"data-title":O}}},W=J;var Q=/==([^=]+)==/gm,Z=({classNames:e})=>{let{hilightClassName:t}=e;return(i,a,s)=>{if(!i.value||typeof i.value!="string"||!s||a===void 0)return;let r=[...i.value.matchAll(Q)];if(r.length===0)return;let n=[],u=0;for(let o of r)u!==o.index&&n.push({type:"text",value:i.value.slice(u,o.index)}),n.push({type:"text",value:o[1],data:{hName:"mark",hProperties:{className:t}}}),u=o.index+o[0].length;u<i.value.length&&n.push({type:"text",value:i.value.slice(u)}),s.children&&s.children.splice(a,1,...n)}},$=Z;var ee=["avif","bmp","gif","jpeg","jpg","png","svg","webp"],p=null,te=e=>(p||(p=e),I),C=e=>p&&p.files[e]||null,ie=e=>p?C(p.idsByWebPath[e]):null,se=e=>p?C(p.idsByLabelSlug[e]):null,ae=()=>p?p.imageIds.map(C).filter(e=>e!==null):[],re=()=>p?p.fileTree:[],oe=e=>(p?p.idsByExtension[e]||[]:[]).map(C).filter(i=>i!==null),I={files:{},fileTree:[],idsByExtension:{},idsByLabelSlug:{},idsByWebPath:{},imageIds:[],stats:{},initialize:te,getAllImageFiles:ae,getFileForId:C,getFileForLabelSlug:se,getFileForWebPathSlug:ie,getFilesByExtension:oe,getFileTree:re,...p||{}};var S={basePath:"/",classNames:{calloutClassName:"callout",calloutIsFoldableClassName:"foldable",calloutTitleClassName:"callout-title",errorClassName:"obsidian-md-error",hilightClassName:"obsidian-hilight",imageClassName:"obsidian-img",linkClassName:"obsidian-link",embeddedMdClassName:"obsidian-md-embed "},filePathPrefix:"/vault/",slugify:P,getVaultItemByLabelSlug:e=>I.getFileForLabelSlug(e)},ne=(e={})=>{let t={...S,...e,classNames:{...S.classNames,...e?.classNames}},i=D({...t}),a=W({...t}),s=$({...t});return r=>{N(r,"blockquote",a),N(r,"text",s),N(r,"text",i)}},le=ne;export{S as DefaultRemarkObsidiousOptions,I as ObsidiousVault,ee as ObsidiousVaultImageFiletypes,q as hash,le as remarkObsidious,P as slugify,B as slugifyFilepath};
+// src/ObsidiousVault.ts
+var ObsidiousVaultImageFiletypes = ["avif", "bmp", "gif", "jpeg", "jpg", "png", "svg", "webp"];
+var vaultData = null;
+var initialize = (data) => {
+  if (vaultData) return ObsidiousVault;
+  vaultData = data;
+  return ObsidiousVault;
+};
+var getFileForId = (id) => vaultData ? vaultData.files[id] || null : null;
+var getFileForWebPathSlug = (webPath) => vaultData ? getFileForId(vaultData.idsByWebPath[webPath]) : null;
+var getFileForLabelSlug = (labelSlug) => vaultData ? getFileForId(vaultData.idsByLabelSlug[labelSlug]) : null;
+var getAllFiles = () => vaultData ? Object.values(vaultData.files) : [];
+var getAllImageFiles = () => vaultData ? vaultData.imageIds.map(getFileForId).filter((item) => item !== null) : [];
+var getFileTree = () => vaultData ? vaultData.fileTree : [];
+var getFilesByExtension = (extension) => {
+  const ids = vaultData ? vaultData.idsByExtension[extension] || [] : [];
+  return ids.map(getFileForId).filter((item) => item !== null);
+};
+var ObsidiousVault = {
+  initialize,
+  getAllFiles,
+  getAllImageFiles,
+  getFileForId,
+  getFileForLabelSlug,
+  getFileForWebPathSlug,
+  getFilesByExtension,
+  getFileTree,
+  ...vaultData || {}
+};
+
+// src/ObsidiousUtils.ts
+var slugify = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\/]+/g, "-").replace(/_+/g, "_").replace(/^_+|_+$/g, "");
+var slugifyFilepath = (filepath, extension) => extension === "md" ? slugify(filepath.replace(/\.md$/, "")) : slugify(filepath);
+function hash(str) {
+  var h = 0;
+  var k, i = 0, len = str.length;
+  for (; len >= 4; ++i, len -= 4) {
+    k = str.charCodeAt(i) & 255 | (str.charCodeAt(++i) & 255) << 8 | (str.charCodeAt(++i) & 255) << 16 | (str.charCodeAt(++i) & 255) << 24;
+    k = /* Math.imul(k, m): */
+    (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16);
+    k ^= /* k >>> r: */
+    k >>> 24;
+    h = /* Math.imul(k, m): */
+    (k & 65535) * 1540483477 + ((k >>> 16) * 59797 << 16) ^ /* Math.imul(h, m): */
+    (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+  }
+  switch (len) {
+    case 3:
+      h ^= (str.charCodeAt(i + 2) & 255) << 16;
+    case 2:
+      h ^= (str.charCodeAt(i + 1) & 255) << 8;
+    case 1:
+      h ^= str.charCodeAt(i) & 255;
+      h = /* Math.imul(h, m): */
+      (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+  }
+  h ^= h >>> 13;
+  h = /* Math.imul(h, m): */
+  (h & 65535) * 1540483477 + ((h >>> 16) * 59797 << 16);
+  return ((h ^ h >>> 15) >>> 0).toString(36);
+}
+
+// node_modules/unist-util-is/lib/index.js
+var convert = (
+  // Note: overloads in JSDoc can’t yet use different `@template`s.
+  /**
+   * @type {(
+   *   (<Condition extends string>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & {type: Condition}) &
+   *   (<Condition extends Props>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Condition) &
+   *   (<Condition extends TestFunction>(test: Condition) => (node: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node & Predicate<Condition, Node>) &
+   *   ((test?: null | undefined) => (node?: unknown, index?: number | null | undefined, parent?: Parent | null | undefined, context?: unknown) => node is Node) &
+   *   ((test?: Test) => Check)
+   * )}
+   */
+  /**
+   * @param {Test} [test]
+   * @returns {Check}
+   */
+  function(test) {
+    if (test === null || test === void 0) {
+      return ok;
+    }
+    if (typeof test === "function") {
+      return castFactory(test);
+    }
+    if (typeof test === "object") {
+      return Array.isArray(test) ? anyFactory(test) : propsFactory(test);
+    }
+    if (typeof test === "string") {
+      return typeFactory(test);
+    }
+    throw new Error("Expected function, string, or object as test");
+  }
+);
+function anyFactory(tests) {
+  const checks = [];
+  let index = -1;
+  while (++index < tests.length) {
+    checks[index] = convert(tests[index]);
+  }
+  return castFactory(any);
+  function any(...parameters) {
+    let index2 = -1;
+    while (++index2 < checks.length) {
+      if (checks[index2].apply(this, parameters)) return true;
+    }
+    return false;
+  }
+}
+function propsFactory(check) {
+  const checkAsRecord = (
+    /** @type {Record<string, unknown>} */
+    check
+  );
+  return castFactory(all);
+  function all(node) {
+    const nodeAsRecord = (
+      /** @type {Record<string, unknown>} */
+      /** @type {unknown} */
+      node
+    );
+    let key;
+    for (key in check) {
+      if (nodeAsRecord[key] !== checkAsRecord[key]) return false;
+    }
+    return true;
+  }
+}
+function typeFactory(check) {
+  return castFactory(type);
+  function type(node) {
+    return node && node.type === check;
+  }
+}
+function castFactory(testFunction) {
+  return check;
+  function check(value, index, parent) {
+    return Boolean(
+      looksLikeANode(value) && testFunction.call(
+        this,
+        value,
+        typeof index === "number" ? index : void 0,
+        parent || void 0
+      )
+    );
+  }
+}
+function ok() {
+  return true;
+}
+function looksLikeANode(value) {
+  return value !== null && typeof value === "object" && "type" in value;
+}
+
+// node_modules/unist-util-visit-parents/lib/color.js
+function color(d) {
+  return d;
+}
+
+// node_modules/unist-util-visit-parents/lib/index.js
+var empty = [];
+var CONTINUE = true;
+var EXIT = false;
+var SKIP = "skip";
+function visitParents(tree, test, visitor, reverse) {
+  let check;
+  if (typeof test === "function" && typeof visitor !== "function") {
+    reverse = visitor;
+    visitor = test;
+  } else {
+    check = test;
+  }
+  const is2 = convert(check);
+  const step = reverse ? -1 : 1;
+  factory(tree, void 0, [])();
+  function factory(node, index, parents) {
+    const value = (
+      /** @type {Record<string, unknown>} */
+      node && typeof node === "object" ? node : {}
+    );
+    if (typeof value.type === "string") {
+      const name = (
+        // `hast`
+        typeof value.tagName === "string" ? value.tagName : (
+          // `xast`
+          typeof value.name === "string" ? value.name : void 0
+        )
+      );
+      Object.defineProperty(visit2, "name", {
+        value: "node (" + color(node.type + (name ? "<" + name + ">" : "")) + ")"
+      });
+    }
+    return visit2;
+    function visit2() {
+      let result = empty;
+      let subresult;
+      let offset;
+      let grandparents;
+      if (!test || is2(node, index, parents[parents.length - 1] || void 0)) {
+        result = toResult(visitor(node, parents));
+        if (result[0] === EXIT) {
+          return result;
+        }
+      }
+      if ("children" in node && node.children) {
+        const nodeAsParent = (
+          /** @type {UnistParent} */
+          node
+        );
+        if (nodeAsParent.children && result[0] !== SKIP) {
+          offset = (reverse ? nodeAsParent.children.length : -1) + step;
+          grandparents = parents.concat(nodeAsParent);
+          while (offset > -1 && offset < nodeAsParent.children.length) {
+            const child = nodeAsParent.children[offset];
+            subresult = factory(child, offset, grandparents)();
+            if (subresult[0] === EXIT) {
+              return subresult;
+            }
+            offset = typeof subresult[1] === "number" ? subresult[1] : offset + step;
+          }
+        }
+      }
+      return result;
+    }
+  }
+}
+function toResult(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+  if (typeof value === "number") {
+    return [CONTINUE, value];
+  }
+  return value === null || value === void 0 ? empty : [value];
+}
+
+// node_modules/unist-util-visit/lib/index.js
+function visit(tree, testOrVisitor, visitorOrReverse, maybeReverse) {
+  let reverse;
+  let test;
+  let visitor;
+  if (typeof testOrVisitor === "function" && typeof visitorOrReverse !== "function") {
+    test = void 0;
+    visitor = testOrVisitor;
+    reverse = visitorOrReverse;
+  } else {
+    test = testOrVisitor;
+    visitor = visitorOrReverse;
+    reverse = maybeReverse;
+  }
+  visitParents(tree, test, overload, reverse);
+  function overload(node, parents) {
+    const parent = parents[parents.length - 1];
+    const index = parent ? parent.children.indexOf(node) : void 0;
+    return visitor(node, index, parent);
+  }
+}
+
+// src/createVisitObsidianEmbeds.ts
+var obsidianEmbed = /!?\[\[[^\]]+\]\]/g;
+var obsidianEmbedParams = /!?\[\[([^\|\]]+)(?:\s*\|\s*([^\|\]]+))?\]\]/;
+var createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVaultItemByLabelSlug, slugify: slugify2 }) => {
+  const { linkClassName, imageClassName, errorClassName, mdClassName } = classNames;
+  return (node, index, parent) => {
+    if (!node.value || typeof node.value !== "string" || !parent || index === void 0) return;
+    if (!node.value?.match(obsidianEmbed)?.length) return;
+    const matches = [...node.value.matchAll(obsidianEmbed)];
+    const results = [];
+    let bufferIndex = 0;
+    for (const match of matches) {
+      if (bufferIndex !== match.index) {
+        results.push({ type: "text", value: node.value.slice(bufferIndex, match.index) });
+      }
+      const params = match[0].match(obsidianEmbedParams);
+      if (!params) {
+        results.push({ type: "text", value: match[0] });
+        bufferIndex = match.index + match[0].length;
+        continue;
+      }
+      const urlParamsIndex = params[1].indexOf("#");
+      const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1).trim() : "";
+      const isCarotParams = urlParams.startsWith("^");
+      const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify2(params[1].slice(0, urlParamsIndex).trim()) : slugify2(params[1].trim()));
+      const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
+      const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");
+      if (!vaultItem) {
+        console.error(vaultItem);
+        results.push({
+          type: "text",
+          value: `"${params[1]}" could not be found`,
+          data: { hName: "span", hProperties: { className: errorClassName } }
+        });
+      } else {
+        if (params[0].startsWith("!")) {
+          if (vaultItem.extension === "md") {
+            parent.data = {
+              ...parent.data,
+              hName: "div",
+              hProperties: {
+                className: mdClassName,
+                options: params[2] ?? void 0,
+                "data-file-id": vaultItem.id,
+                "data-hash-params": slugify2(urlParams)
+              }
+            };
+          } else {
+            results.push({
+              type: "image",
+              url: fileUrl,
+              alt: title,
+              data: {
+                hProperties: {
+                  className: imageClassName,
+                  options: params[2] ?? void 0,
+                  src: fileUrl,
+                  "data-ext": vaultItem.extension,
+                  "data-label": vaultItem.label
+                }
+              }
+            });
+          }
+        } else {
+          const hash2 = urlParams ? `#${slugify2(urlParams)}` : "";
+          results.push({
+            type: "link",
+            url: fileUrl + hash2,
+            title: params[2] ?? title,
+            data: {
+              hProperties: {
+                className: linkClassName,
+                options: params[2] ?? void 0,
+                src: fileUrl,
+                "data-ext": vaultItem.extension,
+                "data-hash-params": slugify2(urlParams),
+                "data-label": vaultItem.label
+              }
+            },
+            children: [{ type: "text", value: params[2] ?? title }]
+          });
+        }
+      }
+      bufferIndex = match.index + match[0].length;
+    }
+    if (bufferIndex < node.value.length) {
+      results.push({ type: "text", value: node.value.slice(bufferIndex) });
+    }
+    if (typeof index === "number" && parent.children) {
+      parent.children.splice(index, 1, ...results);
+    } else {
+      parent.children = results;
+    }
+  };
+};
+var createVisitObsidianEmbeds_default = createVisitObsidianEmbeds;
+
+// src/createVisitObsidianCallouts.ts
+var calloutRegex = /^\[\!\s*([\w-]+)\s*\]([-+]?)/;
+var createVisitObsidianCallouts = ({ classNames }) => {
+  const { calloutClassName, calloutIsFoldableClassName, calloutTitleClassName } = classNames;
+  return (blockquoteNode) => {
+    if (!Array.isArray(blockquoteNode.children) || blockquoteNode.children.length === 0) return;
+    const firstParagraph = blockquoteNode.children.find((child) => child.type === "paragraph");
+    if (!firstParagraph || firstParagraph.children.length === 0) return;
+    const firstTextNode = firstParagraph.children.find((child) => child.type === "text");
+    if (!firstTextNode || typeof firstTextNode.value !== "string" || firstTextNode.value.trim() === "") return;
+    const match = calloutRegex.exec(firstTextNode.value);
+    if (!match) return;
+    const calloutType = match[1].toLowerCase();
+    const foldableModifier = match[2] || "";
+    const isFoldable = foldableModifier !== "";
+    const initialFolded = foldableModifier === "-";
+    firstTextNode.value = firstTextNode.value.replace(calloutRegex, "").trim();
+    const titleText = firstTextNode.value || calloutType;
+    blockquoteNode.data ??= {};
+    blockquoteNode.data.hProperties = {
+      ...blockquoteNode.data.hProperties,
+      "data-callout": calloutType,
+      "data-initial-folded": String(initialFolded),
+      "data-title": titleText,
+      className: [calloutClassName, isFoldable ? calloutIsFoldableClassName : ""]
+    };
+    firstParagraph.data ??= {};
+    if (!firstParagraph.data.hProperties) firstParagraph.data.hProperties = {};
+    firstParagraph.data.hProperties = {
+      ...firstParagraph.data.hProperties,
+      className: [calloutTitleClassName],
+      "data-callout": calloutType,
+      "data-title": titleText
+    };
+  };
+};
+var createVisitObsidianCallouts_default = createVisitObsidianCallouts;
+
+// src/createVisitObsidianHilights.ts
+var hilight = /==([^=]+)==/gm;
+var createVisitObsidianHilights = ({ classNames }) => {
+  const { hilightClassName } = classNames;
+  return (node, index, parent) => {
+    if (!node.value || typeof node.value !== "string" || !parent || index === void 0) return;
+    const matches = [...node.value.matchAll(hilight)];
+    if (matches.length === 0) return;
+    const results = [];
+    let bufferIndex = 0;
+    for (const match of matches) {
+      if (bufferIndex !== match.index) {
+        results.push({ type: "text", value: node.value.slice(bufferIndex, match.index) });
+      }
+      results.push({
+        type: "text",
+        value: match[1],
+        data: { hName: "mark", hProperties: { className: hilightClassName } }
+      });
+      bufferIndex = match.index + match[0].length;
+    }
+    if (bufferIndex < node.value.length)
+      results.push({ type: "text", value: node.value.slice(bufferIndex) });
+    if (parent.children) {
+      parent.children.splice(index, 1, ...results);
+    }
+  };
+};
+var createVisitObsidianHilights_default = createVisitObsidianHilights;
+
+// src/RemarkObsidious.ts
+var DefaultRemarkObsidiousOptions = {
+  basePath: "",
+  classNames: {
+    calloutClassName: "callout",
+    calloutIsFoldableClassName: "foldable",
+    calloutTitleClassName: "callout-title",
+    errorClassName: "obsidian-md-error",
+    hilightClassName: "obsidian-hilight",
+    imageClassName: "obsidian-img",
+    linkClassName: "obsidian-link",
+    mdClassName: "obsidian-md-embed "
+  },
+  filePathPrefix: "",
+  slugify,
+  getVaultItemByLabelSlug: (labelSlug) => ObsidiousVault.getFileForLabelSlug(labelSlug)
+};
+var RemarkObsidious = (options = {}) => {
+  const config = {
+    ...DefaultRemarkObsidiousOptions,
+    ...options,
+    classNames: {
+      ...DefaultRemarkObsidiousOptions.classNames,
+      ...options?.classNames
+    }
+  };
+  const visitObsidianEmbeds = createVisitObsidianEmbeds_default({ ...config });
+  const visitObsidianCallouts = createVisitObsidianCallouts_default({ ...config });
+  const visitObsidianHilights = createVisitObsidianHilights_default({ ...config });
+  return (tree) => {
+    visit(tree, "blockquote", visitObsidianCallouts);
+    visit(tree, "text", visitObsidianHilights);
+    visit(tree, "text", visitObsidianEmbeds);
+  };
+};
+var RemarkObsidious_default = RemarkObsidious;
+export {
+  DefaultRemarkObsidiousOptions,
+  ObsidiousVault,
+  ObsidiousVaultImageFiletypes,
+  hash,
+  RemarkObsidious_default as remarkObsidious,
+  slugify,
+  slugifyFilepath
+};
 //# sourceMappingURL=index.js.map

@@ -4,7 +4,7 @@ import { describe, it, expect } from "vitest";
 import { processMarkdown } from "./shared";
 import { DefaultRemarkObsidiousOptions as defaults } from "../src/index";
 import { JSDOM } from "jsdom";
-import content from './fixtures/nested_callouts.md?raw';
+import content from '../testVault/callouts/nested callouts.md?raw';
 
 describe("Callouts feature", () => {
     it("should transform basic callouts", async () => {
@@ -15,8 +15,7 @@ describe("Callouts feature", () => {
         const document = dom.window.document;
         const callout = document.querySelector('blockquote[data-callout]');
 
-        // Assert that the callout has the correct attributes and class name
-        expect(callout).not.toBeNull(); // Ensure the element exists
+        expect(callout).not.toBeNull();
         expect(callout?.getAttribute('data-callout')).toBe('callout');
         expect(callout?.getAttribute('data-initial-folded')).toBe('false');
         expect(callout?.getAttribute('data-title')).toBe('This is a callout');
@@ -77,13 +76,13 @@ describe("Callouts feature", () => {
 
         const dom = new JSDOM(output);
         const document = dom.window.document;
-        const callout = document.querySelector('blockquote[data-callout="level_1"]');
-        const level2 = callout?.querySelector('blockquote[data-callout="level_2"]');
-        const level3 = level2?.querySelector('blockquote[data-callout="level_3"]');
+        const callout = document.querySelector('blockquote[data-callout="first"]');
+        const level2 = callout?.querySelector('blockquote[data-callout="second"]');
+        const level3 = level2?.querySelector('blockquote[data-callout="third"]');
 
-        expect(callout).not.toBeNull(); // Ensure the element exists
-        expect(level2).not.toBeNull(); // Ensure the element exists
-        expect(level3).not.toBeNull(); // Ensure the element exists
+        expect(callout).not.toBeNull();
+        expect(level2).not.toBeNull();
+        expect(level3).not.toBeNull();
     });
 
 });

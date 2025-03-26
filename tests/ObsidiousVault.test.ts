@@ -4,14 +4,12 @@ import { DefaultRemarkObsidiousOptions as defaults } from "../src/index";
 import { JSDOM } from "jsdom";
 import RemarkObsidious from '../src/RemarkObsidious';
 import { ObsidiousVault, ObsidiousVaultItem, slugify, slugifyFilepath } from '../src/index';
-import generatedTestVaultIndex from '../testVault/obsidious-index.json';
+import generatedTestVaultIndex from '../testVault/test-index.json';
 
 describe("Obsidious Vault feature", () => {
 
-
     const firstVaultItemID: string = Object.keys(generatedTestVaultIndex.files)[0];
     const vaultItem: ObsidiousVaultItem = (generatedTestVaultIndex.files as Record<string, ObsidiousVaultItem>)[firstVaultItemID];
-
 
     it("should return a vault item for a valid ID", async () => {
         const vault = ObsidiousVault.initialize(generatedTestVaultIndex);

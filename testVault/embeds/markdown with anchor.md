@@ -1,0 +1,1 @@
+![[an example article#Fusce-iaculis-ante-diam]]

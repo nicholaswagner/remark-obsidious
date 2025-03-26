@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  remark-obsidious:
+    image: node:20
+    container_name: remark-obsidious
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules  # Prevents overwriting node_modules inside container
+    # command: tail -f /dev/null  # Keeps the container running
+    command: sh -c "npm run dev:code & npm run dev:test"
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "5173:5173"  # If using Vite dev server (adjust as needed)
+    networks:
+      - obsidious_network
+networks:
+  obsidious_network:
+    driver: bridge

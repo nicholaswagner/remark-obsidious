@@ -11,7 +11,7 @@
     "include": [
       "scripts/**/*.ts",
       "src/**/*.ts",
-      "test/**/*",
+      "tests/**/*", "testVault",
     ],
     "exclude": [
       "node_modules",

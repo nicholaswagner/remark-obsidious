@@ -1,3 +1,6 @@
 hidden_folder
 .DS_Store
 obsidious-index.json
+obsidious-index.log
+readme.md
+*.html

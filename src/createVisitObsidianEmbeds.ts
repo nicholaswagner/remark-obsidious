@@ -35,7 +35,7 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
             const urlParamsIndex = params[1].indexOf('#');
             const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1).trim() : '';
             const isCarotParams = urlParams.startsWith('^');
-            const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex)) : slugify(params[1]));
+            const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex).trim()) : slugify(params[1].trim()));
             const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
 
             const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");

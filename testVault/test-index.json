@@ -1,0 +1,528 @@
+{
+  "files": {
+    "r1g6ez": {
+      "extension": "md",
+      "mtimeMs": 1743004336141.3796,
+      "filepath": "an example article.md",
+      "fileType": "file",
+      "id": "r1g6ez",
+      "label": "an example article"
+    },
+    "16cnh2z": {
+      "extension": "md",
+      "mtimeMs": 1743004092087.6238,
+      "filepath": "an example paragraph.md",
+      "fileType": "file",
+      "id": "16cnh2z",
+      "label": "an example paragraph"
+    },
+    "muv2q0": {
+      "mtimeMs": 1743016808826.074,
+      "filepath": "callouts",
+      "fileType": "folder",
+      "id": "muv2q0",
+      "label": "callouts"
+    },
+    "ocqyu4": {
+      "extension": "md",
+      "mtimeMs": 1743003159740.8464,
+      "filepath": "callouts/basic callout folded.md",
+      "fileType": "file",
+      "id": "ocqyu4",
+      "label": "basic callout folded"
+    },
+    "1ns39wx": {
+      "extension": "md",
+      "mtimeMs": 1743005205012.9011,
+      "filepath": "callouts/basic callout unfolded.md",
+      "fileType": "file",
+      "id": "1ns39wx",
+      "label": "basic callout unfolded"
+    },
+    "wm9x5w": {
+      "extension": "md",
+      "mtimeMs": 1743003741810.1355,
+      "filepath": "callouts/basic callout.md",
+      "fileType": "file",
+      "id": "wm9x5w",
+      "label": "basic callout"
+    },
+    "6fhnz9": {
+      "extension": "md",
+      "mtimeMs": 1743003712318.1914,
+      "filepath": "callouts/callout with hilights.md",
+      "fileType": "file",
+      "id": "6fhnz9",
+      "label": "callout with hilights"
+    },
+    "8hsvfk": {
+      "extension": "md",
+      "mtimeMs": 1743003263703.6726,
+      "filepath": "callouts/multiple callouts.md",
+      "fileType": "file",
+      "id": "8hsvfk",
+      "label": "multiple callouts"
+    },
+    "17alyau": {
+      "extension": "md",
+      "mtimeMs": 1743013890938.453,
+      "filepath": "callouts/nested callouts.md",
+      "fileType": "file",
+      "id": "17alyau",
+      "label": "nested callouts"
+    },
+    "d9iu81": {
+      "mtimeMs": 1743016808828.6006,
+      "filepath": "embeds",
+      "fileType": "folder",
+      "id": "d9iu81",
+      "label": "embeds"
+    },
+    "9zr24g": {
+      "extension": "md",
+      "mtimeMs": 1743005288656.794,
+      "filepath": "embeds/image inside paragraph.md",
+      "fileType": "file",
+      "id": "9zr24g",
+      "label": "image inside paragraph"
+    },
+    "fnzxab": {
+      "extension": "md",
+      "mtimeMs": 1743003079603.255,
+      "filepath": "embeds/image with dimensions.md",
+      "fileType": "file",
+      "id": "fnzxab",
+      "label": "image with dimensions"
+    },
+    "1qp79bx": {
+      "extension": "md",
+      "mtimeMs": 1743003030635.989,
+      "filepath": "embeds/image with options.md",
+      "fileType": "file",
+      "id": "1qp79bx",
+      "label": "image with options"
+    },
+    "1myn3s3": {
+      "extension": "md",
+      "mtimeMs": 1743003959382.3486,
+      "filepath": "embeds/image.md",
+      "fileType": "file",
+      "id": "1myn3s3",
+      "label": "image"
+    },
+    "inkx0b": {
+      "extension": "md",
+      "mtimeMs": 1743004362227.752,
+      "filepath": "embeds/markdown with anchor.md",
+      "fileType": "file",
+      "id": "inkx0b",
+      "label": "markdown with anchor"
+    },
+    "lpgsuu": {
+      "extension": "md",
+      "mtimeMs": 1743004269696.0854,
+      "filepath": "embeds/markdown.md",
+      "fileType": "file",
+      "id": "lpgsuu",
+      "label": "markdown"
+    },
+    "uiar6f": {
+      "mtimeMs": 1743018179467.4292,
+      "filepath": "folder 1",
+      "fileType": "folder",
+      "id": "uiar6f",
+      "label": "folder 1"
+    },
+    "3zer02": {
+      "extension": "md",
+      "mtimeMs": 1743018209435.214,
+      "filepath": "folder 1/folder 1 file.md",
+      "fileType": "file",
+      "id": "3zer02",
+      "label": "folder 1 file"
+    },
+    "naudla": {
+      "mtimeMs": 1743018217037.1436,
+      "filepath": "folder 1/folder 2",
+      "fileType": "folder",
+      "id": "naudla",
+      "label": "folder 2"
+    },
+    "mzdd1r": {
+      "extension": "md",
+      "mtimeMs": 1743018225697.7534,
+      "filepath": "folder 1/folder 2/folder 2 file.md",
+      "fileType": "file",
+      "id": "mzdd1r",
+      "label": "folder 2 file"
+    },
+    "1y3zxo": {
+      "mtimeMs": 1743018232832.8982,
+      "filepath": "folder 1/folder 2/folder 3",
+      "fileType": "folder",
+      "id": "1y3zxo",
+      "label": "folder 3"
+    },
+    "1jxswtq": {
+      "extension": "md",
+      "mtimeMs": 1743018242945.1912,
+      "filepath": "folder 1/folder 2/folder 3/folder 3 file.md",
+      "fileType": "file",
+      "id": "1jxswtq",
+      "label": "folder 3 file"
+    },
+    "3hqep6": {
+      "mtimeMs": 1742867113459.536,
+      "filepath": "images",
+      "fileType": "folder",
+      "id": "3hqep6",
+      "label": "images"
+    },
+    "ygwsns": {
+      "extension": "png",
+      "mtimeMs": 1742866279862.1973,
+      "filepath": "images/obsidious.png",
+      "fileType": "file",
+      "id": "ygwsns",
+      "label": "obsidious.png"
+    },
+    "y9mqyd": {
+      "mtimeMs": 1743017686202.4958,
+      "filepath": "internal links",
+      "fileType": "folder",
+      "id": "y9mqyd",
+      "label": "internal links"
+    },
+    "39wtai": {
+      "extension": "md",
+      "mtimeMs": 1743004470915.2375,
+      "filepath": "internal links/basic.md",
+      "fileType": "file",
+      "id": "39wtai",
+      "label": "basic"
+    },
+    "18694w6": {
+      "extension": "md",
+      "mtimeMs": 1743003868852.399,
+      "filepath": "internal links/with alias.md",
+      "fileType": "file",
+      "id": "18694w6",
+      "label": "with alias"
+    },
+    "1i50zlw": {
+      "extension": "md",
+      "mtimeMs": 1743003904994.5215,
+      "filepath": "internal links/with anchor and alias.md",
+      "fileType": "file",
+      "id": "1i50zlw",
+      "label": "with anchor and alias"
+    },
+    "jp9dsj": {
+      "extension": "md",
+      "mtimeMs": 1743003837971.904,
+      "filepath": "internal links/with anchor.md",
+      "fileType": "file",
+      "id": "jp9dsj",
+      "label": "with anchor"
+    },
+    "1n97qnj": {
+      "mtimeMs": 1743017686203.406,
+      "filepath": "markdown",
+      "fileType": "folder",
+      "id": "1n97qnj",
+      "label": "markdown"
+    },
+    "1mo2gcq": {
+      "extension": "md",
+      "mtimeMs": 1743003521032.682,
+      "filepath": "markdown/paragraph with hilight.md",
+      "fileType": "file",
+      "id": "1mo2gcq",
+      "label": "paragraph with hilight"
+    },
+    "rti4pa": {
+      "extension": "md",
+      "mtimeMs": 1743003575980.894,
+      "filepath": "markdown/paragraph with multiple hilights.md",
+      "fileType": "file",
+      "id": "rti4pa",
+      "label": "paragraph with multiple hilights"
+    },
+    "1wrxlbg": {
+      "extension": "md",
+      "mtimeMs": 1743004486269.9883,
+      "filepath": "markdown/text with hilight.md",
+      "fileType": "file",
+      "id": "1wrxlbg",
+      "label": "text with hilight"
+    }
+  },
+  "fileTree": [
+    {
+      "id": "r1g6ez",
+      "label": "an example article"
+    },
+    {
+      "id": "16cnh2z",
+      "label": "an example paragraph"
+    },
+    {
+      "id": "muv2q0",
+      "label": "callouts",
+      "children": [
+        {
+          "id": "ocqyu4",
+          "label": "basic callout folded"
+        },
+        {
+          "id": "1ns39wx",
+          "label": "basic callout unfolded"
+        },
+        {
+          "id": "wm9x5w",
+          "label": "basic callout"
+        },
+        {
+          "id": "6fhnz9",
+          "label": "callout with hilights"
+        },
+        {
+          "id": "8hsvfk",
+          "label": "multiple callouts"
+        },
+        {
+          "id": "17alyau",
+          "label": "nested callouts"
+        }
+      ]
+    },
+    {
+      "id": "d9iu81",
+      "label": "embeds",
+      "children": [
+        {
+          "id": "9zr24g",
+          "label": "image inside paragraph"
+        },
+        {
+          "id": "fnzxab",
+          "label": "image with dimensions"
+        },
+        {
+          "id": "1qp79bx",
+          "label": "image with options"
+        },
+        {
+          "id": "1myn3s3",
+          "label": "image"
+        },
+        {
+          "id": "inkx0b",
+          "label": "markdown with anchor"
+        },
+        {
+          "id": "lpgsuu",
+          "label": "markdown"
+        }
+      ]
+    },
+    {
+      "id": "uiar6f",
+      "label": "folder 1",
+      "children": [
+        {
+          "id": "3zer02",
+          "label": "folder 1 file"
+        },
+        {
+          "id": "naudla",
+          "label": "folder 2",
+          "children": [
+            {
+              "id": "mzdd1r",
+              "label": "folder 2 file"
+            },
+            {
+              "id": "1y3zxo",
+              "label": "folder 3",
+              "children": [
+                {
+                  "id": "1jxswtq",
+                  "label": "folder 3 file"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "3hqep6",
+      "label": "images",
+      "children": [
+        {
+          "id": "ygwsns",
+          "label": "obsidious.png"
+        }
+      ]
+    },
+    {
+      "id": "y9mqyd",
+      "label": "internal links",
+      "children": [
+        {
+          "id": "39wtai",
+          "label": "basic"
+        },
+        {
+          "id": "18694w6",
+          "label": "with alias"
+        },
+        {
+          "id": "1i50zlw",
+          "label": "with anchor and alias"
+        },
+        {
+          "id": "jp9dsj",
+          "label": "with anchor"
+        }
+      ]
+    },
+    {
+      "id": "1n97qnj",
+      "label": "markdown",
+      "children": [
+        {
+          "id": "1mo2gcq",
+          "label": "paragraph with hilight"
+        },
+        {
+          "id": "rti4pa",
+          "label": "paragraph with multiple hilights"
+        },
+        {
+          "id": "1wrxlbg",
+          "label": "text with hilight"
+        }
+      ]
+    }
+  ],
+  "idsByExtension": {
+    "md": [
+      "r1g6ez",
+      "16cnh2z",
+      "ocqyu4",
+      "1ns39wx",
+      "wm9x5w",
+      "6fhnz9",
+      "8hsvfk",
+      "17alyau",
+      "9zr24g",
+      "fnzxab",
+      "1qp79bx",
+      "1myn3s3",
+      "inkx0b",
+      "lpgsuu",
+      "3zer02",
+      "mzdd1r",
+      "1jxswtq",
+      "39wtai",
+      "18694w6",
+      "1i50zlw",
+      "jp9dsj",
+      "1mo2gcq",
+      "rti4pa",
+      "1wrxlbg"
+    ],
+    "png": [
+      "ygwsns"
+    ]
+  },
+  "idsByLabelSlug": {
+    "an-example-article": "r1g6ez",
+    "an-example-paragraph": "16cnh2z",
+    "callouts": "muv2q0",
+    "basic-callout-folded": "ocqyu4",
+    "basic-callout-unfolded": "1ns39wx",
+    "basic-callout": "wm9x5w",
+    "callout-with-hilights": "6fhnz9",
+    "multiple-callouts": "8hsvfk",
+    "nested-callouts": "17alyau",
+    "embeds": "d9iu81",
+    "image-inside-paragraph": "9zr24g",
+    "image-with-dimensions": "fnzxab",
+    "image-with-options": "1qp79bx",
+    "image": "1myn3s3",
+    "markdown-with-anchor": "inkx0b",
+    "markdown": "1n97qnj",
+    "folder-1": "uiar6f",
+    "folder-1-file": "3zer02",
+    "folder-2": "naudla",
+    "folder-2-file": "mzdd1r",
+    "folder-3": "1y3zxo",
+    "folder-3-file": "1jxswtq",
+    "images": "3hqep6",
+    "obsidious-png": "ygwsns",
+    "internal-links": "y9mqyd",
+    "basic": "39wtai",
+    "with-alias": "18694w6",
+    "with-anchor-and-alias": "1i50zlw",
+    "with-anchor": "jp9dsj",
+    "paragraph-with-hilight": "1mo2gcq",
+    "paragraph-with-multiple-hilights": "rti4pa",
+    "text-with-hilight": "1wrxlbg"
+  },
+  "idsByWebPath": {
+    "an-example-article": "r1g6ez",
+    "an-example-paragraph": "16cnh2z",
+    "callouts": "muv2q0",
+    "callouts/basic-callout-folded": "ocqyu4",
+    "callouts/basic-callout-unfolded": "1ns39wx",
+    "callouts/basic-callout": "wm9x5w",
+    "callouts/callout-with-hilights": "6fhnz9",
+    "callouts/multiple-callouts": "8hsvfk",
+    "callouts/nested-callouts": "17alyau",
+    "embeds": "d9iu81",
+    "embeds/image-inside-paragraph": "9zr24g",
+    "embeds/image-with-dimensions": "fnzxab",
+    "embeds/image-with-options": "1qp79bx",
+    "embeds/image": "1myn3s3",
+    "embeds/markdown-with-anchor": "inkx0b",
+    "embeds/markdown": "lpgsuu",
+    "folder-1": "uiar6f",
+    "folder-1/folder-1-file": "3zer02",
+    "folder-1/folder-2": "naudla",
+    "folder-1/folder-2/folder-2-file": "mzdd1r",
+    "folder-1/folder-2/folder-3": "1y3zxo",
+    "folder-1/folder-2/folder-3/folder-3-file": "1jxswtq",
+    "images": "3hqep6",
+    "images/obsidious-png": "ygwsns",
+    "internal-links": "y9mqyd",
+    "internal-links/basic": "39wtai",
+    "internal-links/with-alias": "18694w6",
+    "internal-links/with-anchor-and-alias": "1i50zlw",
+    "internal-links/with-anchor": "jp9dsj",
+    "markdown": "1n97qnj",
+    "markdown/paragraph-with-hilight": "1mo2gcq",
+    "markdown/paragraph-with-multiple-hilights": "rti4pa",
+    "markdown/text-with-hilight": "1wrxlbg"
+  },
+  "imageIds": [
+    "ygwsns"
+  ],
+  "stats": {
+    "totalFiles": 33,
+    "totalDirectories": 8,
+    "totalImages": 1,
+    "fileTypesSummary": [
+      {
+        "ext": "md",
+        "count": 24
+      },
+      {
+        "ext": "png",
+        "count": 1
+      }
+    ]
+  }
+}

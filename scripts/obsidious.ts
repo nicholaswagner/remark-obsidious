@@ -122,7 +122,6 @@ const indexVault = async (dirents: Dirent[]) => {
         const isFile = ent.isFile();
         const isDirectory = ent.isDirectory();
         const id = hash(filepath);
-
         let stats;
         try {
             stats = await fs.promises.stat(path.join(parentPath, filename));

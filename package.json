@@ -1,6 +1,6 @@
 {
   "name": "remark-obsidious",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "exports": {
     ".": "./dist/index.js"
@@ -8,18 +8,19 @@
   "types": "dist/types/index.d.ts",
   "type": "module",
   "scripts": {
-    "spotcheck": "tsc -p tsconfig.types.json --noEmit",
-    "trace": "tsc --traceResolution",
-    "postinstall": "shx chmod +x ./bin/*",
-    "dev": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=debug --outfile=dist/index.js --color --watch",
-    "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
-    "postbuild": "tsc -p tsconfig.types.json && npm run build:bin",
-    "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",
+    "postinstall": "shx chmod +x ./bin/* && shx chmod +x ./scripts/*",
+    "dev:build-fixtures": "tsx bin/obsidious.ts --in testVault --out ./testVault --logs ./testVault --indexName test-index",
+    "dev:code": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=debug --outfile=dist/index.js --color --watch",
+    "dev:docker": "docker-compose up -d",
+    "dev:test": "vitest --watch",
     "prebuild": "tsx scripts/sync-npm-package-version.ts",
-    "test": "vitest --ui --watch",
-    "build:test-index": "tsx bin/obsidious.ts --in testVault --out ./testVault",
+    "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
+    "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",
+    "postbuild": "tsc -p tsconfig.types.json && npm run build:bin",
+    "test": "npx vitest run",
     "coverage": "vitest run --coverage"
   },
+    
   "bin": {
     "obsidious": "bin/obsidious.ts"
   },

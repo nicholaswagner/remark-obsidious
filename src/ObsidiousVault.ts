@@ -28,8 +28,9 @@ export type ObsidiousVaultData = {
     stats: Record<string, any>;
 }
 
-export type ObsidiousVaultInterface = ObsidiousVaultData & {
-    initialize: (data: ObsidiousVaultData) => ObsidiousVaultData;
+export type ObsidiousVaultInterface = {
+    initialize: (data: ObsidiousVaultData) => ObsidiousVaultInterface;
+    getAllFiles: () => ObsidiousVaultItem[];
     getAllImageFiles: () => ObsidiousVaultItem[];
     getFileForId: (id: string) => ObsidiousVaultItem | null;
     getFileForLabelSlug: (labelSlug: string) => ObsidiousVaultItem | null;
@@ -49,6 +50,7 @@ const initialize = (data: ObsidiousVaultData): ObsidiousVaultInterface => {
 const getFileForId = (id: string) => vaultData ? vaultData.files[id] || null : null;
 const getFileForWebPathSlug = (webPath: string) => vaultData ? getFileForId(vaultData.idsByWebPath[webPath]) : null;
 const getFileForLabelSlug = (labelSlug: string) => vaultData ? getFileForId(vaultData.idsByLabelSlug[labelSlug]) : null;
+const getAllFiles = () => vaultData ? Object.values(vaultData.files) : [];
 const getAllImageFiles = () => vaultData ? vaultData.imageIds.map(getFileForId).filter(item => item !== null) : [];
 const getFileTree = () => vaultData ? vaultData.fileTree : [];
 const getFilesByExtension = (extension: string): ObsidiousVaultItem[] => {
@@ -57,14 +59,8 @@ const getFilesByExtension = (extension: string): ObsidiousVaultItem[] => {
 }
 
 const ObsidiousVault: ObsidiousVaultInterface = {
-    files: {},
-    fileTree: [],
-    idsByExtension: {},
-    idsByLabelSlug: {},
-    idsByWebPath: {},
-    imageIds: [],
-    stats: {},
     initialize,
+    getAllFiles,
     getAllImageFiles,
     getFileForId,
     getFileForLabelSlug,

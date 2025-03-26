@@ -1,1 +1,1 @@
-![[obsidious.png | with-options]]
+![[obsidious.png | avatar]]
