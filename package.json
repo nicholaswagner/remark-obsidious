@@ -1,6 +1,6 @@
 {
   "name": "remark-obsidious",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "remark-obsidious: A strict TypeScript-powered remark plugin for transforming Obsidian-flavored Markdown. Builds a file tree & lookup table while handling callouts, embeds, and internal links—perfect for static sites using raw vault files.",
   "exports": {
     ".": "./dist/index.js"
@@ -16,7 +16,7 @@
     "prebuild": "tsx scripts/sync-npm-package-version.ts",
     "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
     "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",
-    "postbuild": "tsc -p tsconfig.types.json && npm run build:bin",
+    "postbuild": "tsc -p tsconfig.types.json && npm run build:bin && npx tsx scripts/update-readme.ts",
     "test": "npx vitest run",
     "coverage": "vitest run --coverage"
   },

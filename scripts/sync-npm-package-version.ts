@@ -1,7 +1,7 @@
 #!/usr/bin/env -S npx tsx
 
 import { readFile, writeFile } from 'node:fs/promises';
-import packagejson from '../package-lock.json';
+import packagejson from '../package.json';
 
 const version = packagejson.version;
 const filepaths = [
@@ -17,3 +17,5 @@ for (const path of filepaths) {
     );
     await writeFile(path, content, 'utf-8');
 }
+
+console.log(`Updated ${filepaths.length} files with version ${version}`);

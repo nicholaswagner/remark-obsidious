@@ -21,8 +21,9 @@ export type ObsidiousVaultData = {
     imageIds: string[];
     stats: Record<string, any>;
 };
-export type ObsidiousVaultInterface = ObsidiousVaultData & {
-    initialize: (data: ObsidiousVaultData) => ObsidiousVaultData;
+export type ObsidiousVaultInterface = {
+    initialize: (data: ObsidiousVaultData) => ObsidiousVaultInterface;
+    getAllFiles: () => ObsidiousVaultItem[];
     getAllImageFiles: () => ObsidiousVaultItem[];
     getFileForId: (id: string) => ObsidiousVaultItem | null;
     getFileForLabelSlug: (labelSlug: string) => ObsidiousVaultItem | null;

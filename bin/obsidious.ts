@@ -8,7 +8,7 @@ import ignore from 'ignore';
 import yargs from 'yargs';
 import winston from 'winston';
 
-const NPM_PACKAGE_VERSION = '0.6.0';
+const NPM_PACKAGE_VERSION = '0.8.0';
 
 import type {
     ObsidiousVaultItem,
@@ -122,7 +122,6 @@ const indexVault = async (dirents: Dirent[]) => {
         const isFile = ent.isFile();
         const isDirectory = ent.isDirectory();
         const id = hash(filepath);
-
         let stats;
         try {
             stats = await fs.promises.stat(path.join(parentPath, filename));

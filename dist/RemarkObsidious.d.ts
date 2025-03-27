@@ -12,7 +12,7 @@ export type RemarkObsidiousOptions = {
         hilightClassName: string;
         imageClassName: string;
         linkClassName: string;
-        embeddedMdClassName: string;
+        mdClassName: string;
     };
     filePathPrefix: string;
     slugify: typeof slugify;

@@ -5,13 +5,13 @@
 Let me dogfood this beast for a bit before you try to use it in anything you care about.  
 I anticipate that I'll be making heavy changes as I get a feel for what works and what doesn't in the near future
 
+---
+
 > [!CAUTION] 
 > Seriously, do not use this! Until I ship a 1.0.0 release I reserve the right to change any thing at any time 😜
 
----
-
 ### Latest build info: 
-- @latest build version is: <!-- <version> -->0.7.3<!-- <version/> -->
+- @latest build version is: <!-- <version> -->0.8.0<!-- <version/> -->
 
 ---
 
