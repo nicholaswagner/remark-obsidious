@@ -12,7 +12,7 @@
     "dev:build-fixtures": "tsx bin/obsidious.ts --in testVault --out ./testVault --logs ./testVault --indexName test-index",
     "dev:code": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=debug --outfile=dist/index.js --color --watch",
     "dev:docker": "docker-compose up -d",
-    "dev:test": "vitest --watch",
+    "dev:test": "npm run dev:build-fixtures && npx vitest --watch",
     "prebuild": "tsx scripts/sync-npm-package-version.ts",
     "build": "esbuild src/index.ts --bundle --format=esm --sourcemap --log-level=error --outfile=dist/index.js --minify",
     "build:bin": "shx cp -R scripts/obsidious.ts bin/obsidious.ts && shx chmod +x bin/obsidious.ts",

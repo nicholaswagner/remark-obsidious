@@ -2,7 +2,7 @@
   "files": {
     "r1g6ez": {
       "extension": "md",
-      "mtimeMs": 1743004336141.3796,
+      "mtimeMs": 1743022026859.9006,
       "filepath": "an example article.md",
       "fileType": "file",
       "id": "r1g6ez",
@@ -72,7 +72,7 @@
       "label": "nested callouts"
     },
     "d9iu81": {
-      "mtimeMs": 1743016808828.6006,
+      "mtimeMs": 1743019171574.727,
       "filepath": "embeds",
       "fileType": "folder",
       "id": "d9iu81",
@@ -80,7 +80,7 @@
     },
     "9zr24g": {
       "extension": "md",
-      "mtimeMs": 1743005288656.794,
+      "mtimeMs": 1743019157383.076,
       "filepath": "embeds/image inside paragraph.md",
       "fileType": "file",
       "id": "9zr24g",
@@ -112,7 +112,7 @@
     },
     "inkx0b": {
       "extension": "md",
-      "mtimeMs": 1743004362227.752,
+      "mtimeMs": 1743021873657.9863,
       "filepath": "embeds/markdown with anchor.md",
       "fileType": "file",
       "id": "inkx0b",
@@ -127,7 +127,7 @@
       "label": "markdown"
     },
     "uiar6f": {
-      "mtimeMs": 1743018179467.4292,
+      "mtimeMs": 1743018454303.5552,
       "filepath": "folder 1",
       "fileType": "folder",
       "id": "uiar6f",
@@ -142,7 +142,7 @@
       "label": "folder 1 file"
     },
     "naudla": {
-      "mtimeMs": 1743018217037.1436,
+      "mtimeMs": 1743018454303.7969,
       "filepath": "folder 1/folder 2",
       "fileType": "folder",
       "id": "naudla",
@@ -157,7 +157,7 @@
       "label": "folder 2 file"
     },
     "1y3zxo": {
-      "mtimeMs": 1743018232832.8982,
+      "mtimeMs": 1743018454304.0383,
       "filepath": "folder 1/folder 2/folder 3",
       "fileType": "folder",
       "id": "1y3zxo",
@@ -255,6 +255,14 @@
       "fileType": "file",
       "id": "1wrxlbg",
       "label": "text with hilight"
+    },
+    "15dw805": {
+      "extension": "json",
+      "mtimeMs": 1743036580809.712,
+      "filepath": "test-index.json",
+      "fileType": "file",
+      "id": "15dw805",
+      "label": "test-index.json"
     }
   },
   "fileTree": [
@@ -405,6 +413,10 @@
           "label": "text with hilight"
         }
       ]
+    },
+    {
+      "id": "15dw805",
+      "label": "test-index.json"
     }
   ],
   "idsByExtension": {
@@ -436,6 +448,9 @@
     ],
     "png": [
       "ygwsns"
+    ],
+    "json": [
+      "15dw805"
     ]
   },
   "idsByLabelSlug": {
@@ -470,7 +485,8 @@
     "with-anchor": "jp9dsj",
     "paragraph-with-hilight": "1mo2gcq",
     "paragraph-with-multiple-hilights": "rti4pa",
-    "text-with-hilight": "1wrxlbg"
+    "text-with-hilight": "1wrxlbg",
+    "test-index-json": "15dw805"
   },
   "idsByWebPath": {
     "an-example-article": "r1g6ez",
@@ -505,14 +521,15 @@
     "markdown": "1n97qnj",
     "markdown/paragraph-with-hilight": "1mo2gcq",
     "markdown/paragraph-with-multiple-hilights": "rti4pa",
-    "markdown/text-with-hilight": "1wrxlbg"
+    "markdown/text-with-hilight": "1wrxlbg",
+    "test-index-json": "15dw805"
   },
   "imageIds": [
     "ygwsns"
   ],
   "stats": {
-    "totalFiles": 33,
-    "totalDirectories": 8,
+    "totalFiles": 34,
+    "totalDirectories": 9,
     "totalImages": 1,
     "fileTypesSummary": [
       {
@@ -521,6 +538,10 @@
       },
       {
         "ext": "png",
+        "count": 1
+      },
+      {
+        "ext": "json",
         "count": 1
       }
     ]

@@ -60,12 +60,12 @@ const RemarkObsidious: Plugin<[ObsidiousOptions?], Root> = (options: ObsidiousOp
         },
     };
     const visitObsidianEmbeds = createVisitObsidianEmbeds({ ...config });
-    const visitObsidianCallouts = createVisitObsidianCallouts({ ...config });
     const visitObsidianHilights = createVisitObsidianHilights({ ...config });
+    const visitObsidianCallouts = createVisitObsidianCallouts({ ...config });
 
     return (tree) => {
-        visit(tree, 'blockquote', visitObsidianCallouts);
         visit(tree, 'text', visitObsidianHilights);
+        visit(tree, 'blockquote', visitObsidianCallouts);
         visit(tree, 'text', visitObsidianEmbeds);
     };
 }

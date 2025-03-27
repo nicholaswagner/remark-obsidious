@@ -44,7 +44,6 @@ const createVisitObsidianCallouts = ({ classNames }: RemarkObsidiousOptions): Vi
             ...blockquoteNode.data.hProperties,
             'data-callout': calloutType,
             'data-initial-folded': String(initialFolded),
-            'data-title': titleText,
             className: [calloutClassName, isFoldable ? calloutIsFoldableClassName : '']
         };
 
@@ -54,7 +53,6 @@ const createVisitObsidianCallouts = ({ classNames }: RemarkObsidiousOptions): Vi
             ...firstParagraph.data.hProperties,
             className: [calloutTitleClassName],
             'data-callout': calloutType,
-            'data-title': titleText
         };
     };
 };

@@ -14,13 +14,11 @@ describe("Callouts feature", () => {
         const dom = new JSDOM(output);
         const document = dom.window.document;
         const callout = document.querySelector('blockquote[data-callout]');
-
+        console.log(output);
         expect(callout).not.toBeNull();
         expect(callout?.getAttribute('data-callout')).toBe('callout');
         expect(callout?.getAttribute('data-initial-folded')).toBe('false');
-        expect(callout?.getAttribute('data-title')).toBe('This is a callout');
         expect(callout?.classList.contains(defaults.classNames.calloutClassName)).toBe(true);
-
         const title = callout?.querySelector('.callout-title');
         expect(title?.textContent).toBe('This is a callout');
     });
@@ -36,7 +34,6 @@ describe("Callouts feature", () => {
         expect(callout).not.toBeNull();
         expect(callout?.getAttribute('data-callout')).toBe('bug');
         expect(callout?.getAttribute('data-initial-folded')).toBe('false'); // Default is false
-        expect(callout?.getAttribute('data-title')).toBe('Because of course i\'ll need this callout...');
         expect(callout?.classList.contains(defaults.classNames.calloutClassName)).toBe(true);
 
         const title = callout?.querySelector('.callout-title');
