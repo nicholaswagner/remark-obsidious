@@ -1,1 +1,1 @@
-[[callouts#embeds]]
+[[basic callout#embeds]]

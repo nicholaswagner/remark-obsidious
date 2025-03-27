@@ -1,1 +1,1 @@
-internal link with alias: [[callouts | a link to the callouts file]]
+internal link with alias: [[basic callout | a link to the basic callout file]]

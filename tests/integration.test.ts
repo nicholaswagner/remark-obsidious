@@ -21,28 +21,24 @@ describe("![[local_embed]] feature", () => {
         const output = await processMarkdown(input, options);
         const dom = new JSDOM(output);
         const document = dom.window.document;
-
         const embed = document.querySelector(`.${defaults.classNames.mdClassName}`);
-
         expect(embed?.getAttribute('data-file-id')).toBe(mockVaultItem.id);
         expect(embed?.getAttribute('data-hash-params')).toBe('');
-        expect(embed?.getAttribute('options')).toBeNull();
         expect(embed).not.toBeNull();
     });
 
     it('should transform image embeds', async () => {
-        const input = `![[${mockImageVaultItem.label}]]`;
+        const imageMeta = 'avatar'; // css class / pixel dimensions e.g., 200x200
+        const input = `![[${mockImageVaultItem.label} | ${imageMeta}]]`;
         const output = await processMarkdown(input, options);
         const dom = new JSDOM(output);
         const document = dom.window.document;
-
         const embed = document.querySelector(`.${defaults.classNames.imageClassName}`);
-
-        expect(embed).not.toBeNull(); // confirms that image classname also exists
+        expect(embed).not.toBeNull();
         expect(embed?.getAttribute('data-ext')).toBe(mockImageVaultItem.extension);
         expect(embed?.getAttribute('data-label')).toBe(mockImageVaultItem.label);
         expect(embed?.getAttribute('alt')).toBe(mockImageVaultItem.label);
-        expect(embed?.getAttribute('options')).toBeNull();
+        expect(embed?.getAttribute('data-meta')).toBe(imageMeta);
     });
 
     it('should transform [[wiki links]]', async () => {
@@ -51,11 +47,9 @@ describe("![[local_embed]] feature", () => {
         const output = await processMarkdown(input, options);
         const dom = new JSDOM(output);
         const document = dom.window.document;
-
-        const embed = document.querySelector(`.${defaults.classNames.linkClassName}`);
+        const embed: HTMLAnchorElement | null = document.querySelector(`.${defaults.classNames.linkClassName}`);
         expect(embed).not.toBeNull();
-        expect(embed?.getAttribute('src')).toBe(mockVaultItem.filepath);
-        expect(embed?.getAttribute('title')).toBe(`${mockVaultItem.label}#${header}`);
+        expect(embed?.href).toBe(`${mockVaultItem.filepath}#${slugify(header)}`);
         expect(embed?.getAttribute('data-ext')).toBe(mockVaultItem.extension);
         expect(embed?.getAttribute('data-hash-params')).toBe(slugify(header));
     });
@@ -67,11 +61,10 @@ describe("![[local_embed]] feature", () => {
         const output = await processMarkdown(input, options);
         const dom = new JSDOM(output);
         const document = dom.window.document;
-
-        const embed = document.querySelector(`.${defaults.classNames.linkClassName}`);
+        const embed: HTMLAnchorElement | null = document.querySelector(`.${defaults.classNames.linkClassName}`);
         expect(embed).not.toBeNull();
-        expect(embed?.getAttribute('src')).toBe(mockVaultItem.filepath);
-        expect(embed?.getAttribute('title')).toBe(`${alias}`);
+        expect(embed?.textContent).toBe(alias);
+        expect(embed?.href).toBe(`${mockVaultItem.filepath}#${slugify(header)}`);
         expect(embed?.getAttribute('data-ext')).toBe(mockVaultItem.extension);
         expect(embed?.getAttribute('data-hash-params')).toBe(slugify(header));
     });

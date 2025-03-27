@@ -17,7 +17,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
         if (!node.value || typeof node.value !== 'string' || !parent || index === undefined) return;
 
         if (!node.value?.match(obsidianEmbed)?.length) return;
-
         const matches = [...node.value.matchAll(obsidianEmbed)];
         const results: PhrasingContent[] = [];
         let bufferIndex = 0;
@@ -35,10 +34,12 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
             const urlParamsIndex = params[1].indexOf('#');
             const urlParams = urlParamsIndex !== -1 ? params[1].slice(urlParamsIndex + 1).trim() : '';
             const isCarotParams = urlParams.startsWith('^');
-            const vaultItem = getVaultItemByLabelSlug(urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex).trim()) : slugify(params[1].trim()));
-            const title = isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1];
+            const possibleLabelSlug = urlParamsIndex !== -1 ? slugify(params[1].slice(0, urlParamsIndex).trim()) : slugify(params[1].trim());
+            const vaultItem = getVaultItemByLabelSlug(possibleLabelSlug);
+            const title = (isCarotParams ? `${vaultItem?.label} > ${urlParams.slice(1)}` : params[1]).trim();
 
-            const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");
+            const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");  // where you would fetch this item
+
 
             if (!vaultItem) {
                 console.error(vaultItem);
@@ -57,7 +58,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                             hName: 'div',
                             hProperties: {
                                 className: mdClassName,
-                                options: params[2] ?? undefined,
                                 'data-file-id': vaultItem.id,
                                 'data-hash-params': slugify(urlParams),
                             }
@@ -71,10 +71,9 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                             data: {
                                 hProperties: {
                                     className: imageClassName,
-                                    options: params[2] ?? undefined,
-                                    src: fileUrl,
                                     'data-ext': vaultItem.extension,
                                     'data-label': vaultItem.label,
+                                    'data-meta': params[2] ?? undefined,
                                 },
                             },
                         });
@@ -85,12 +84,9 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
                     results.push({
                         type: 'link',
                         url: fileUrl + hash,
-                        title: params[2] ?? title,
                         data: {
                             hProperties: {
                                 className: linkClassName,
-                                options: params[2] ?? undefined,
-                                src: fileUrl,
                                 'data-ext': vaultItem.extension,
                                 'data-hash-params': slugify(urlParams),
                                 'data-label': vaultItem.label,

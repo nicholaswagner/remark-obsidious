@@ -1,1 +1,1 @@
-[[callouts#embeds | an anchor link with alias text]]
+[[basic callout#embeds | an anchor link with alias text]]

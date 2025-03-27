@@ -11,7 +11,7 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
 > Seriously, do not use this! Until I ship a 1.0.0 release I reserve the right to change any thing at any time 😜
 
 ### Latest build info: 
-- @latest build version is: <!-- <version> -->0.8.0<!-- <version/> -->
+- @latest build version is: <!-- <version> -->0.9.0<!-- <version/> -->
 
 ---
 
@@ -76,18 +76,23 @@ I anticipate that I'll be making heavy changes as I get a feel for what works an
     - `stats` some stats about the vault
 
 ---
+
+##### Final items before 1.0.0
 - [x] Add basic test coverage
+- [ ] dogfood this in another app and tweak accordingly
 - [ ] Write some documentation / Getting started guides
+- [ ] fix the bugs I didn't catch during the previous two rounds
 
 
+---
 
 ###### Feature creep / future ideas
 - [ ] [maybe include `semantic-release`](https://www.npmjs.com/package/semantic-release) so i don't have deal with it 
 - [ ] add github deployment strat 
 - [ ] add support for `symlinks`
-- [ ] total vault filesize
+- [ ] consider adding total vault filesize to stats
 - [ ] consider the value of adding filesize for vaultItems vs increased index size
-- [ ] MDX support
+- [ ] MDX support?
 - [ ] consider some ~~excuses~~ ideas for [remark redirective](https://github.com/remarkjs/remark-directive) usage
 
 

@@ -14,7 +14,6 @@ describe("Callouts feature", () => {
         const dom = new JSDOM(output);
         const document = dom.window.document;
         const callout = document.querySelector('blockquote[data-callout]');
-        console.log(output);
         expect(callout).not.toBeNull();
         expect(callout?.getAttribute('data-callout')).toBe('callout');
         expect(callout?.getAttribute('data-initial-folded')).toBe('false');
