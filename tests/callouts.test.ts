@@ -72,9 +72,9 @@ describe("Callouts feature", () => {
 
         const dom = new JSDOM(output);
         const document = dom.window.document;
-        const callout = document.querySelector('blockquote[data-callout="first"]');
-        const level2 = callout?.querySelector('blockquote[data-callout="second"]');
-        const level3 = level2?.querySelector('blockquote[data-callout="third"]');
+        const callout = document.querySelector('blockquote[data-callout="info"]');
+        const level2 = callout?.querySelector('blockquote[data-callout="success"]');
+        const level3 = level2?.querySelector('blockquote[data-callout="gem"]');
 
         expect(callout).not.toBeNull();
         expect(level2).not.toBeNull();

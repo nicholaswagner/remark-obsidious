@@ -65,8 +65,8 @@ const RemarkObsidious: Plugin<[ObsidiousOptions?], Root> = (options: ObsidiousOp
 
     return (tree) => {
         visit(tree, 'text', visitObsidianHilights);
-        visit(tree, 'blockquote', visitObsidianCallouts);
         visit(tree, 'text', visitObsidianEmbeds);
+        visit(tree, 'blockquote', visitObsidianCallouts);
     };
 }
 
