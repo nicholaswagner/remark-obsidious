@@ -40,7 +40,6 @@ const createVisitObsidianEmbeds = ({ basePath, classNames, filePathPrefix, getVa
 
             const fileUrl = `${filePathPrefix}${vaultItem?.filepath}`.replace(/\/\//g, "/");  // where you would fetch this item
 
-
             if (!vaultItem) {
                 console.error(vaultItem);
                 results.push({
