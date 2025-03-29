@@ -22,4 +22,11 @@ describe("remark-obsidious - hilights feature", () => {
         const output = await processMarkdown(input);
         expect(output).toSatisfy((output: string) => !output.includes("<mark>"));
     });
+
+    it("should support hilights in callout titles", async () => {
+        const text = 'This is some hilighted text';
+        const input = `[\!info]==${text}==`;
+        const output = await processMarkdown(input);
+        expect(output).toContain(`<mark class="${defaults.classNames.hilightClassName}">${text}</mark>`);
+    });
 }); 

@@ -119,3 +119,14 @@
 {"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/internal links","fileCount":8,"ignoredCount":4}}
 {"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/markdown","fileCount":6,"ignoredCount":3}}
 {"level":"info","message":"Indexing complete.  Vault files have been saved to "}
+{"level":"info","message":["hidden_folder",".DS_Store","obsidious-index.json","obsidious-index.log","readme.md","*.html"]}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault","fileCount":16,"ignoredCount":7}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/callouts","fileCount":12,"ignoredCount":6}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/embeds","fileCount":12,"ignoredCount":6}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/folder 1","fileCount":3,"ignoredCount":1}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/folder 1/folder 2","fileCount":4,"ignoredCount":2}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/folder 1/folder 2/folder 3","fileCount":3,"ignoredCount":2}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/images","fileCount":2,"ignoredCount":1}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/internal links","fileCount":8,"ignoredCount":4}}
+{"level":"info","message":{"directory":"/Users/bricksandwich/Repos/remark-obsidious/testVault/markdown","fileCount":6,"ignoredCount":3}}
+{"level":"info","message":"Indexing complete.  Vault files have been saved to "}
