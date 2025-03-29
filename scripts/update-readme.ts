@@ -2,7 +2,7 @@
 
 import { readFile, writeFile } from 'node:fs/promises';
 
-const NPM_PACKAGE_VERSION = '0.9.8';
+const NPM_PACKAGE_VERSION = '0.9.9';
 
 const getMarkerRegex = (marker: string) =>
     new RegExp(`<!--\\s*<${marker}>\\s*-->([\\s\\S]*?)<!--\\s*<${marker}\\s*/?>\\s*-->`, 'g');

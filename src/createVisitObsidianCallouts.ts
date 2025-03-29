@@ -54,10 +54,10 @@ const createVisitObsidianCallouts = ({ classNames }: RemarkObsidiousOptions): Vi
                 if (after.trim()) remainingNodes.push({ ...node, value: after.trim() });
                 foundNewline = true;
             } else {
+                if (node.type === 'text' && node.value.trim() === '') continue;
                 titleNodes.push(node);
             }
         }
-
         // If there's no title text, use callout type
         if (titleNodes.length === 0) {
             titleNodes = [{ type: 'text', value: calloutType }];
@@ -92,3 +92,5 @@ const createVisitObsidianCallouts = ({ classNames }: RemarkObsidiousOptions): Vi
 };
 
 export default createVisitObsidianCallouts;
+
+

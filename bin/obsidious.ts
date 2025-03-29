@@ -8,7 +8,7 @@ import ignore from 'ignore';
 import yargs from 'yargs';
 import winston from 'winston';
 
-const NPM_PACKAGE_VERSION = '0.9.8';
+const NPM_PACKAGE_VERSION = '0.9.9';
 
 import type {
     ObsidiousVaultItem,
